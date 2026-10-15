@@ -1,0 +1,16 @@
+Mage Charamancer Foundry v0.5.33 - October 2026
+
+- Import Web Character now offers Create New or Update Selected Actor.
+- Updating an Actor creates a complete, separately named and dated backup Actor BEFORE overwriting anything.
+- Existing Actor ID, permissions, folder, linked tokens and active effects are retained.
+- Existing embedded Item IDs are retained when the incoming traits match; removed Items remain in the backup.
+- Import verifies non-core Talents, Skills and Knowledges; attempts rollback if any step fails.
+- Mage Details / XP and Print M20 Sheet are positioned ahead of the Foundry window-action controls.
+- New XP awards use a single dated ledger entry with a short note rather than two entries (one of them zero XP).
+- Add XP has an optional long session note that is appended to the Mage biography with its date.
+- Mage Details includes a collapsible, consolidated history of XP awards and purchases.
+- Existing XP records, creation budgets and trusted player XP permissions are unchanged.
+
+Important: A Foundry backup is created as a new Actor. Backups can be restored manually.
+Updates have been tested with mocked Foundry Actor operations, including forced failure and rollback.
+Live Foundry v14/worldofdarkness verification is still required, particularly the import dialog and title-bar placement.

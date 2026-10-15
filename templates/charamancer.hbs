@@ -1,0 +1,947 @@
+<div class="mage-charamancer-shell">
+    <nav class="mc-steps" aria-label="Character creation steps">
+        {{#each steps}}
+        <button type="button"
+                class="mc-step {{#if active}}active{{/if}} {{#if complete}}complete{{/if}}"
+                data-step-index="{{@index}}"
+                {{#if disabled}}disabled{{/if}}>
+            <span class="mc-step-number">{{#if complete}}✓{{else}}{{number}}{{/if}}</span>
+            <span>{{label}}</span>
+            {{#if errors}}<span class="mc-step-error-count {{#if advisoryOnly}}advisory{{/if}}">{{errors}}</span>{{/if}}
+        </button>
+        {{/each}}
+    </nav>
+
+    {{#if draftRestored}}
+    <div class="mc-draft-note">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Restored your saved character draft. Progress is saved automatically.
+    </div>
+    {{/if}}
+
+    {{#if oldDraftReset}}
+    <div class="mc-draft-note mc-draft-reset-note">
+        <i class="fa-solid fa-circle-info"></i>
+        The creation workflow changed in this version, so the older draft was reset to prevent mixed base/freebie accounting.
+    </div>
+    {{/if}}
+
+    {{#if phaseBase}}
+    {{#if stepConcept}}
+    <section class="mc-concept-ribbon" aria-label="Character creation progress">
+        <strong><i class="fa-solid fa-user-pen" aria-hidden="true"></i> Concept</strong>
+        <span>Define the Mage first. Dot allocation comes next.</span>
+        <details class="mc-concept-rules" data-panel-key="concept-rules">
+            <summary>Creation rules</summary>
+            <div class="mc-concept-rule-list">
+                <span>Attributes <b>7 / 5 / 3</b></span>
+                <span>Abilities <b>13 / 9 / 5</b></span>
+                <span>Spheres <b>{{rules.baseSphereDots}}</b></span>
+                <span>Backgrounds <b>{{rules.baseBackgroundDots}}</b></span>
+                <span>Arete / Willpower <b>{{rules.baseArete}} / {{rules.baseWillpower}}</b></span>
+                <span>Freebies <b>After Base Review</b></span>
+            </div>
+        </details>
+    </section>
+    {{else}}
+    <section class="mc-quick-rules base-phase" aria-label="Base creation rules">
+        <div class="mc-quick-rule"><strong>Base Creation</strong><span>Finish these allocations first</span></div>
+        <div class="mc-quick-rule"><strong>Attributes</strong><span>1 free each, then 7 / 5 / 3</span></div>
+        <div class="mc-quick-rule"><strong>Abilities</strong><span>13 / 9 / 5 · max 3 now</span></div>
+        <div class="mc-quick-rule"><strong>Spheres</strong><span>{{rules.baseSphereDots}} base dots</span></div>
+        <div class="mc-quick-rule"><strong>Backgrounds</strong><span>{{rules.baseBackgroundDots}} base dots</span></div>
+        <div class="mc-quick-rule"><strong>Arete / Willpower</strong><span>{{rules.baseArete}} / {{rules.baseWillpower}} now</span></div>
+        <div class="mc-quick-costs">
+            <strong>Freebie Points come later.</strong>
+            Finish the normal character first; Base Review will unlock the dedicated Freebies tab.
+        </div>
+    </section>
+    {{/if}}
+    {{else}}
+    <section class="mc-quick-rules freebie-phase" aria-label="Freebie point rules">
+        <div class="mc-quick-rule"><strong>Freebie Phase</strong><span>Base character is locked</span></div>
+        <div class="mc-quick-rule"><strong>Attribute</strong><span>{{rules.freebieCosts.attribute}} FP / dot</span></div>
+        <div class="mc-quick-rule"><strong>Ability</strong><span>{{rules.freebieCosts.ability}} FP / dot</span></div>
+        <div class="mc-quick-rule"><strong>Sphere</strong><span>{{rules.freebieCosts.sphere}} FP / dot</span></div>
+        <div class="mc-quick-rule"><strong>Background</strong><span>{{rules.freebieCosts.background}} FP / dot</span></div>
+        <div class="mc-quick-rule"><strong>Arete / Willpower</strong><span>{{rules.freebieCosts.arete}} / {{rules.freebieCosts.willpower}} FP</span></div>
+        <div class="mc-quick-budget">
+            <strong>{{freebieEvaluation.freebiesSpent}} / {{rules.freebies}} spent</strong>
+            <span>{{freebieEvaluation.freebiesRemaining}} remaining</span>
+        </div>
+    </section>
+    {{/if}}
+
+    <div class="mc-layout">
+        <main class="mc-main">
+            {{#unless stepConcept}}
+            <details class="mc-dot-guide" data-panel-key="dot-guide"><summary>What do the dots mean?</summary><label>Category<select data-guide-category>{{#each guideCategories}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select></label><label>Trait<select data-guide-trait>{{#each guideTraits}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}</select></label><p class="mc-description">{{guideInfo}}</p></details>
+            {{/unless}}
+
+            {{#if hasCurrentIssues}}
+            <section class="mc-current-issues {{#if stepConcept}}mc-concept-issue{{/if}} {{#if currentHasHard}}bad{{else}}warning{{/if}}" aria-live="polite">
+                {{#if showCurrentIssues}}
+                <div class="mc-current-issue-summary">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <div>
+                        <strong>{{currentIssueCountLabel}}</strong>
+                        <span>{{currentIssueSummary}}</span>
+                    </div>
+                    <button type="button" class="mc-issue-dismiss" data-dismiss-current-issues title="Hide this warning for now">×</button>
+                </div>
+                {{else}}
+                <div class="mc-current-issue-summary muted">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    <div><strong>Warnings hidden for this tab.</strong><span>Review still checks everything.</span></div>
+                    <button type="button" class="mc-issue-show" data-show-current-issues>Show</button>
+                </div>
+                {{/if}}
+            </section>
+            {{else}}
+                {{#unless stepBaseReview}}
+                    {{#unless stepFinalReview}}
+                        {{#unless stepFreebies}}
+                    <section class="mc-current-issues clear {{#if stepConcept}}mc-concept-issue{{/if}}">
+                        <div class="mc-current-issue-summary good">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div><strong>No current problems on this tab.</strong><span>Continue when you are ready.</span></div>
+                        </div>
+                    </section>
+                        {{/unless}}
+                    {{/unless}}
+                {{/unless}}
+            {{/if}}
+
+            {{#if stepConcept}}
+            <section class="mc-panel mc-concept-panel">
+                <header class="mc-concept-heading">
+                    <h2>Concept</h2>
+                    <p>Who is your Mage, and how do they see the world?</p>
+                </header>
+
+                <div class="mc-form-grid two-col mc-concept-fields">
+                    <div class="mc-concept-section-title wide">Campaign</div>
+                    <label><span>Player</span><input type="text" data-path="identity.player" value="{{state.identity.player}}" placeholder="Player name"></label>
+                    <label><span>Chronicle</span><input type="text" data-path="identity.chronicle" value="{{state.identity.chronicle}}" placeholder="Chronicle name"></label>
+
+                    <div class="mc-concept-section-title wide">Character</div>
+                    <label><span>Name</span><input type="text" data-path="identity.name" value="{{state.identity.name}}" placeholder="Mage's name"></label>
+                    {{#each identityChoices}}
+                    {{#if sectionStart}}<div class="mc-concept-section-title wide">{{sectionTitle}}</div>{{/if}}
+                    <div class="mc-concept-field">
+                        <label for="mc-concept-{{key}}">{{label}}</label>
+                        <div class="mc-concept-combo" data-concept-combo>
+                            <input type="text" id="mc-concept-{{key}}" data-concept-input data-path="{{path}}"
+                                   value="{{value}}" placeholder="Choose or type…" autocomplete="off"
+                                   role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false">
+                            <button type="button" class="mc-concept-toggle" data-concept-toggle
+                                    aria-label="Show all {{label}} options" title="Show all options">
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div hidden data-concept-options>
+                                {{#each choices}}<span data-concept-option data-value="{{this}}">{{this}}</span>{{/each}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                    <div class="mc-concept-field">
+                        <label for="mc-concept-affinitySphere">Affinity Sphere</label>
+                        <div class="mc-concept-combo" data-concept-combo data-concept-strict="sphere">
+                            <input type="text" id="mc-concept-affinitySphere" data-concept-input
+                                   value="{{affinityDisplay}}" placeholder="Choose a Sphere" autocomplete="off"
+                                   role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false">
+                            <button type="button" class="mc-concept-toggle" data-concept-toggle
+                                    aria-label="Show all Affinity Sphere options" title="Show all Spheres">
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div hidden data-concept-options>
+                                <span data-concept-option data-value="">Choose a Sphere</span>
+                                {{#each spheres}}<span data-concept-option data-value="{{id}}">{{name}}</span>{{/each}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mc-concept-field">
+                        <label for="mc-concept-essence">Essence</label>
+                        <div class="mc-concept-combo" data-concept-combo>
+                            <input type="text" id="mc-concept-essence" data-concept-input
+                                   data-path="{{essenceChoice.path}}" value="{{essenceChoice.value}}"
+                                   placeholder="Choose or type…" autocomplete="off"
+                                   role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false">
+                            <button type="button" class="mc-concept-toggle" data-concept-toggle
+                                    aria-label="Show all Essence options" title="Show all options">
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div hidden data-concept-options>
+                                {{#each essenceChoice.choices}}<span data-concept-option data-value="{{this}}">{{this}}</span>{{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mc-concept-hint">Choose a suggestion or enter custom text. Affinity Sphere must be chosen from the list.</p>
+
+                <div class="mc-concept-arete-option" role="group" aria-label="Starting Arete GM option">
+                    <strong>Starting Arete</strong>
+                    <label class="mc-concept-arete">
+                        <input type="checkbox" data-free-arete2 {{#if state.freeArete2}}checked{{/if}}>
+                        <span>Start at Arete 2 <small>(GM option; no Freebie cost)</small></span>
+                    </label>
+                    <span class="mc-concept-arete-note">Default: Arete 1</span>
+                </div>
+
+                <details class="mc-concept-disclosure" data-panel-key="concept-story">
+                    <summary>Character story &amp; magick <span class="mc-concept-muted">Optional details</span></summary>
+                    <div class="mc-form-grid mc-concept-story">
+                        <label><span>Appearance</span><textarea data-path="identity.appearance" rows="2" placeholder="Clothing, features, mannerisms…">{{state.identity.appearance}}</textarea></label>
+                        <label><span>Biography</span><textarea data-path="identity.biography" rows="4" placeholder="History, Awakening, relationships and goals…">{{state.identity.biography}}</textarea></label>
+                        <label><span>Roleplaying notes</span><textarea data-path="identity.rpTips" rows="3" placeholder="Voice, motivations, beliefs, roleplaying cues…">{{state.identity.rpTips}}</textarea></label>
+                        <label><span>Paradigm</span><textarea data-path="identity.paradigm" rows="2" placeholder="What does your Mage believe makes magick possible?">{{state.identity.paradigm}}</textarea></label>
+                        <label><span>Practice</span><textarea data-path="identity.practice" rows="2" placeholder="Faith healing, prayer, alchemy, technomancy…">{{state.identity.practice}}</textarea></label>
+                        <label><span>Instruments</span><textarea data-path="identity.instruments" rows="2" placeholder="Scripture, focus items, gestures, rituals…">{{state.identity.instruments}}</textarea></label>
+                    </div>
+                </details>
+            </section>
+            {{/if}}
+
+            {{#if stepAttributes}}
+            <section class="mc-panel">
+                <h2>Attributes</h2>
+                <div class="mc-instructions">
+                    <strong>Step 1: choose priorities.</strong>
+                    Set Physical, Social, and Mental so one is <strong>Primary</strong>, one <strong>Secondary</strong>, and one <strong>Tertiary</strong>.
+                    Attribute dots stay locked until all three are chosen. Every Attribute already has its first dot free; then place exactly <strong>7 / 5 / 3</strong> additional dots.
+                    During base creation an Attribute cannot exceed 4. The fifth dot, if wanted, is bought later with Freebie Points.
+                </div>
+
+                {{#unless attributePrioritiesReady}}
+                <div class="mc-priority-lock"><i class="fa-solid fa-lock"></i><strong>Choose all three Attribute priorities to unlock the dots.</strong></div>
+                {{/unless}}
+
+                <div class="mc-three-columns mc-attributes {{#unless attributePrioritiesReady}}ratings-locked{{/unless}}">
+                    {{#each attrGroups}}
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading">
+                            <h3>{{name}}</h3>
+                            <select data-priority-kind="attributes" data-priority-group="{{id}}">
+                                {{#each priorityOptions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+                            </select>
+                        </div>
+
+                        <div class="mc-allocation {{#if status.blocked}}blocked{{else}}{{#if status.over}}over{{else}}{{#if status.remaining}}under{{else}}complete{{/if}}{{/if}}{{/if}}">
+                            {{#if status.blocked}}
+                            <div class="mc-allocation-message">Choose Primary / Secondary / Tertiary first.</div>
+                            {{else}}
+                            <div class="mc-allocation-line"><span>Base dots placed</span><strong>{{status.used}} / {{status.pool}}</strong></div>
+                            {{#if status.remaining}}<div class="mc-allocation-message">Place <strong>{{status.remaining}} more</strong> base dot(s) here.</div>{{/if}}
+                            {{#if status.over}}<div class="mc-overage-message"><strong>Remove {{status.over}} dot(s).</strong> This category is over its normal allocation.</div>{{/if}}
+                            {{#if status.complete}}<div class="mc-allocation-message good">Base allocation complete.</div>{{/if}}
+                            {{/if}}
+                        </div>
+
+                        {{#each attributes}}
+                        <div class="mc-rating-row">
+                            <div class="mc-rating-label"><span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}</div>
+                            <div class="mc-dot-control">
+                                {{#each dots}}
+                                <button type="button"
+                                        class="mc-dot {{#if filled}}filled{{/if}} {{#if future}}future{{/if}}"
+                                        data-rating-kind="attribute"
+                                        data-rating-key="{{../id}}"
+                                        data-rating-value="{{value}}"
+                                        {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{#if future}}Available during Freebies{{else}}Set {{../name}} to {{value}}{{/if}}"></button>
+                                {{/each}}
+                                <span class="mc-rating-value">{{value}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepAbilities}}
+            <section class="mc-panel mc-streamlined-tab">
+                <h2>Abilities</h2>
+                <p class="mc-tab-summary">13 / 9 / 5 base dots · choose one Primary, one Secondary, and one Tertiary · max 3 during base creation.</p>
+                <p class="mc-noncore-note">** Non-core: explicit DM approval required. Core overlaps are listed as alternate names in the information hover.</p>
+                <div class="mc-instructions compact">
+                    <strong>Choose the three priorities first.</strong>
+                    Once Talents, Skills, and Knowledges are all assigned, the dot controls unlock. Ratings 4-5 are purchased later with Freebie Points.
+                </div>
+
+                {{#unless abilityPrioritiesReady}}
+                <div class="mc-priority-lock compact"><i class="fa-solid fa-lock"></i><strong>Set Talents, Skills, and Knowledges to Primary / Secondary / Tertiary to unlock dots.</strong></div>
+                {{/unless}}
+
+                <div class="mc-three-columns mc-abilities {{#unless abilityPrioritiesReady}}ratings-locked{{/unless}}">
+                    {{#each abilityGroups}}
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading">
+                            <h3>{{name}}</h3>
+                            <select data-priority-kind="abilities" data-priority-group="{{id}}">
+                                {{#each priorityOptions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+                            </select>
+                        </div>
+
+                        {{#if status.blocked}}
+                        <div class="mc-mini-note">Choose a priority above to unlock this section.</div>
+                        {{else}}
+                        <div class="mc-allocation compact {{#if status.over}}over{{else}}{{#if status.remaining}}under{{else}}complete{{/if}}{{/if}}">
+                            <div class="mc-allocation-line"><span>Base dots placed</span><strong>{{status.used}} / {{status.pool}}</strong></div>
+                            {{#if status.remaining}}<div class="mc-allocation-message">Place <strong>{{status.remaining}} more</strong> base dot(s) here.</div>{{/if}}
+                            {{#if status.over}}<div class="mc-overage-message"><strong>Remove {{status.over}} dot(s).</strong></div>{{/if}}
+                            {{#if status.complete}}<div class="mc-allocation-message good">Base allocation complete.</div>{{/if}}
+                        </div>
+                        {{/if}}
+
+                        {{#each abilities}}
+                        {{#if firstNonCore}}<div class="mc-extra-selected-label">GM-approved {{../name}} <small>Storyteller approval required</small></div>{{/if}}
+                        <div class="mc-rating-row">
+                            <div class="mc-rating-label"><span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}</div>
+                            <div class="mc-dot-control">
+                                {{#each dots}}
+                                <button type="button"
+                                        class="mc-dot {{#if filled}}filled{{/if}} {{#if future}}future{{/if}}"
+                                        data-rating-kind="ability"
+                                        data-rating-key="{{../id}}"
+                                        data-rating-value="{{value}}"
+                                        {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{#if future}}Available during Freebies{{else}}Set {{../name}} to {{value}}{{/if}}"></button>
+                                {{/each}}
+                                <span class="mc-rating-value">{{value}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
+
+                        <details class="mc-trait-picker mc-extra-picker" data-panel-key="extras-{{id}}">
+                            <summary><span><i class="fa-solid fa-plus" aria-hidden="true"></i> Additional / GM-approved {{name}}</span><small>{{extraAbilities.length}} available</small></summary>
+                            <div class="mc-extra-picker-note">Select an ability to add its dot track. GM approval is required; the ability costs no points until rated.</div>
+                            <div class="mc-extra-options">
+                            {{#each extraAbilities}}
+                                <div class="mc-extra-option">
+                                    <button type="button" data-add-ability="{{id}}" aria-label="Add {{name}} to this character"><i class="fa-solid fa-plus" aria-hidden="true"></i><span>{{name}}</span></button>
+                                    <span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}</span></span>
+                                </div>
+                            {{else}}
+                                <p class="mc-extra-empty">All available additions are already selected.</p>
+                            {{/each}}
+                            </div>
+                        </details>
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepMagic}}
+            <section class="mc-panel mc-streamlined-tab">
+                <h2>Magic & Backgrounds</h2>
+                <p class="mc-tab-summary">Allocate {{rules.baseSphereDots}} Sphere dots and {{rules.baseBackgroundDots}} Background dots. Your Affinity Sphere still needs at least 1 dot.</p>
+                <div class="mc-magic-fixed-summary" role="note" aria-label="Starting Arete and Willpower">
+                    <span class="mc-magic-fixed-item"><span>Arete</span><strong>{{areteValue}}</strong></span>
+                    <span class="mc-magic-fixed-item"><span>Willpower</span><strong>{{willpowerValue}}</strong></span>
+                    <span class="mc-magic-fixed-help">Starting values are fixed; raise them during Freebies.</span>
+                </div>
+                <details class="mc-magic-rules" data-panel-key="magic-rules">
+                    <summary>Planning higher starting Spheres</summary>
+                    <p>You may plan a starting Sphere up to {{rules.creationCaps.arete}}. If more Arete is required, the Freebies step automatically purchases the necessary Arete before optional spending.</p>
+                </details>
+
+                <div class="mc-split-section">
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>Spheres</h3><strong>{{baseEvaluation.sphereStatus.used}} / {{rules.baseSphereDots}}</strong></div>
+                        <div class="mc-allocation compact {{#if baseEvaluation.sphereStatus.over}}over{{else}}{{#if baseEvaluation.sphereStatus.remaining}}under{{else}}complete{{/if}}{{/if}}">
+                            {{#if baseEvaluation.sphereStatus.remaining}}<div class="mc-allocation-message">Place <strong>{{baseEvaluation.sphereStatus.remaining}} more</strong> base Sphere dot(s).</div>{{/if}}
+                            {{#if baseEvaluation.sphereStatus.over}}<div class="mc-overage-message"><strong>Remove {{baseEvaluation.sphereStatus.over}} Sphere dot(s).</strong></div>{{/if}}
+                            {{#if baseEvaluation.sphereStatus.complete}}<div class="mc-allocation-message good">Sphere allocation complete.</div>{{/if}}
+                        </div>
+
+                        {{#if spherePlanNeedsArete}}
+                        <div class="mc-sphere-plan warning" role="note">
+                            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                            <div><strong>Requires Arete {{requiredArete}}.</strong> Freebies automatically adds {{requiredAreteDots}} Arete dot(s) for {{requiredAreteFreebieCost}} FP.</div>
+                        </div>
+                        {{/if}}
+
+                        <div class="mc-list-grid">
+                            {{#each spheres}}
+                            <div class="mc-rating-row {{#if affinitySelected}}affinity{{/if}}">
+                                <div class="mc-rating-label"><span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}{{#if affinitySelected}}<span class="mc-affinity-badge">Affinity</span>{{/if}}</div>
+                                <div class="mc-dot-control">
+                                    {{#each dots}}
+                                    <button type="button"
+                                            class="mc-dot {{#if filled}}filled{{/if}} {{#if future}}future{{/if}}"
+                                            data-rating-kind="sphere"
+                                            data-rating-key="{{../id}}"
+                                            data-rating-value="{{value}}"
+                                            {{#if disabled}}disabled{{/if}}
+                                            aria-label="{{#if future}}Not available during starting character creation (Arete maximum {{@root.rules.creationCaps.arete}}){{else}}Set {{../name}} to {{value}}{{/if}}"></button>
+                                    {{/each}}
+                                    <span class="mc-rating-value">{{value}}</span>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>Backgrounds</h3><strong>{{baseEvaluation.backgroundStatus.used}} / {{rules.baseBackgroundDots}}</strong></div>
+                        <div class="mc-allocation compact {{#if baseEvaluation.backgroundStatus.over}}over{{else}}{{#if baseEvaluation.backgroundStatus.remaining}}under{{else}}complete{{/if}}{{/if}}">
+                            {{#if baseEvaluation.backgroundStatus.remaining}}<div class="mc-allocation-message">Place <strong>{{baseEvaluation.backgroundStatus.remaining}} more</strong> base Background dot(s).</div>{{/if}}
+                            {{#if baseEvaluation.backgroundStatus.over}}<div class="mc-overage-message"><strong>Remove {{baseEvaluation.backgroundStatus.over}} Background dot(s).</strong></div>{{/if}}
+                            {{#if baseEvaluation.backgroundStatus.complete}}<div class="mc-allocation-message good">Background allocation complete.</div>{{/if}}
+                        </div>
+
+                        <div class="mc-list-grid">
+                            {{#each backgrounds}}
+                            <div class="mc-rating-row">
+                                <div class="mc-rating-label"><span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}{{#if isAvatar}} Starting Quintessence equals the Avatar rating.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}</div>
+                                <div class="mc-dot-control">
+                                    {{#each dots}}
+                                    <button type="button"
+                                            class="mc-dot {{#if filled}}filled{{/if}}"
+                                            data-rating-kind="background"
+                                            data-rating-key="{{../key}}"
+                                            data-rating-value="{{value}}"
+                                            {{#if disabled}}disabled{{/if}}></button>
+                                    {{/each}}
+                                    <span class="mc-rating-value">{{value}}</span>
+                                </div>
+                            </div>
+                            {{/each}}
+                            <details class="mc-custom-background mc-background-add" data-panel-key="custom-background">
+                                <summary><span><i class="fa-solid fa-plus" aria-hidden="true"></i> Add custom Background</span><small>GM approval</small></summary>
+                                <div class="mc-custom-background-body">
+                                    <label for="mc-custom-background-name">Name</label>
+                                    <input id="mc-custom-background-name" type="text" data-custom-background-name placeholder="Background name" autocomplete="off">
+                                    <label for="mc-custom-background-description">Description / agreed dot benefits</label>
+                                    <textarea id="mc-custom-background-description" data-custom-background-description rows="3" placeholder="Describe the Background and its Storyteller-approved benefits"></textarea>
+                                    <div class="mc-custom-background-actions">
+                                        <small>Adds a new Background at 0 dots.</small>
+                                        <button type="button" data-custom-background-add>Add Background</button>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepBaseReview}}
+            <section class="mc-panel">
+                <h2>Base Character Review</h2>
+                <div class="mc-instructions">
+                    This checkpoint contains <strong>only normal character creation</strong>. No Freebie Points have been spent yet.
+                    When every base allocation is complete, lock this version of the character and move to the dedicated Freebie phase.
+                </div>
+
+                {{#if baseEvaluation.valid}}
+                <div class="mc-validation good"><strong>Basic character complete.</strong> Everything required for normal creation is allocated. You can now spend up to {{rules.freebies}} Freebie Points.</div>
+                {{#if spherePlanNeedsArete}}
+                <div class="mc-validation warning"><strong>{{requiredAreteFreebieCost}} FP will be spent automatically on Arete.</strong> Your planned Spheres reach {{requiredArete}}, so entering the Freebies phase will automatically raise Arete from {{rules.baseArete}} to {{requiredArete}}. You will then have {{baseFreebiesAfterRequiredArete}} FP left for optional purchases.</div>
+                {{/if}}
+                {{else}}
+                    {{#if baseEvaluation.hasHardErrors}}
+                    <div class="mc-validation bad"><strong>Base character is not ready yet.</strong> Red items are actual setup/rule problems. Yellow items mean required normal dots are still unspent.</div>
+                    {{else}}
+                    <div class="mc-validation warning"><strong>Base creation is still in progress.</strong> Finish the yellow allocation reminders below.</div>
+                    {{/if}}
+                {{/if}}
+
+                {{#if baseEvaluation.errors.length}}
+                <div class="mc-review-issues">
+                    {{#each baseEvaluation.errors}}
+                    <article class="mc-error-card {{#if advisory}}advisory{{/if}}">
+                        <div class="mc-error-tab">{{#if advisory}}Allocation reminder · {{/if}}{{tab}} tab</div>
+                        <div class="mc-error-message">{{message}}</div>
+                        <div class="mc-error-fix"><strong>{{#if advisory}}What to do:{{else}}How to fix it:{{/if}}</strong> {{fix}}</div>
+                        {{#if canJump}}<button type="button" data-error-step="{{stepIndex}}">Go to {{tab}}</button>{{/if}}
+                    </article>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                <div class="mc-review-grid">
+                    <div>
+                        <h3>Base Magic</h3>
+                        <dl>
+                            <dt>Starting Arete</dt><dd>{{state.core.arete}}</dd>
+                            <dt>Arete needed by Sphere plan</dt><dd>{{requiredArete}}{{#if spherePlanNeedsArete}} <small>({{requiredAreteFreebieCost}} FP to reach)</small>{{/if}}</dd>
+                            <dt>Willpower</dt><dd>{{state.core.willpower}}</dd>
+                            <dt>Sphere dots</dt><dd>{{baseEvaluation.sphereStatus.used}} / {{rules.baseSphereDots}}</dd>
+                            <dt>Background dots</dt><dd>{{baseEvaluation.backgroundStatus.used}} / {{rules.baseBackgroundDots}}</dd>
+                        </dl>
+                    </div>
+                    <div>
+                        <h3>Starting Quintessence</h3>
+                        <dl>
+                            <dt>Avatar</dt><dd>{{avatarRating}}</dd>
+                            <dt>Quintessence</dt><dd>{{quintessence}}</dd>
+                        </dl>
+                        <p class="mc-help">Starting Quintessence is being set equal to the Avatar Background rating.</p>
+                    </div>
+                </div>
+
+                <div class="mc-phase-action">
+                    <button type="button" class="mc-primary-action" data-begin-freebies {{#unless baseEvaluation.valid}}disabled{{/unless}}>
+                        <i class="fa-solid fa-coins"></i> Finish Base Character & Spend Freebies
+                    </button>
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepFreebies}}
+            <section class="mc-panel mc-freebies-panel">
+                <div class="mc-freebie-intro">
+                    <h2>Spend Freebie Points</h2>
+                    <div class="mc-freebie-budget-summary" role="group" aria-label="Freebie Point budget summary">
+                    <div class="mc-freebie-budget-item" aria-label="Total Freebie Point budget"><span>Budget</span><strong>{{rules.freebies}} FP</strong></div>
+                    <div class="mc-freebie-budget-item" aria-label="Freebie Points spent" {{#if spherePlanNeedsArete}}title="Includes {{requiredAreteAutoCost}} FP automatically spent on required Arete"{{/if}}>
+                        <span>Spent</span><strong>{{freebieEvaluation.freebiesSpent}} FP</strong>{{#if spherePlanNeedsArete}}<span class="mc-freebie-auto-hint" aria-label="Includes {{requiredAreteAutoCost}} FP required Arete" title="Includes {{requiredAreteAutoCost}} FP automatically spent on Arete"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>{{/if}}
+                    </div>
+                    <div class="mc-freebie-budget-item mc-freebie-remaining" aria-label="Unspent Freebie Points"><span>Remaining</span><strong>{{freebieEvaluation.freebiesRemaining}} FP</strong></div>
+                    </div>
+                    <details class="mc-freebie-help" data-panel-key="freebie-help">
+                        <summary>Spending rules</summary>
+                        <p>Base character dots are locked; green dots are Freebie purchases. Click the highest optional green dot again to refund it. Unaffordable choices appear in red. To change base allocations, select <strong>Edit Base Character</strong> (which resets Freebie purchases).</p>
+                    </details>
+                </div>
+                <p class="mc-freebie-carryover">Unspent Freebie Points do not carry forward as XP. You'll be asked to confirm before creating a character with points remaining.</p>
+
+                <section class="mc-merits mc-merits-compact" aria-label="Freebie Merits and Flaws">
+                    <details class="mc-merits-panel" data-panel-key="merits-section">
+                        <summary>
+                            <strong>Merits &amp; Flaws</strong>
+                            <span>{{meritsFlaws.length}} selected · {{meritTotals.merits}} FP in Merits · +{{meritTotals.bonus}} FP from Flaws</span>
+                        </summary>
+                        <p class="mc-merits-guidance">Optional; GM approval required. Merits spend FP; Flaws award FP up to the campaign cap. Mechanical effects are not automated.</p>
+                    {{#each meritsFlaws}}
+                    <div class="mc-selected-mf">
+                        <strong>Added {{kind}}: {{name}}</strong>
+                        <span>{{#if isMerit}}Cost{{else}}Bonus value{{/if}}: {{points}} FP</span>
+                        <span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{description}} · {{points}} FP. Explicit DM approval required.</span></span>
+                        <p>{{description}}</p><small>{{reference}}</small>
+                        <button type="button" data-mf-remove="{{id}}">Remove</button>
+                    </div>
+                    {{else}}
+                    <p class="mc-merits-empty">No Merits or Flaws selected.</p>
+                    {{/each}}
+                    <details data-panel-key="merit-add">
+                        <summary>Add a Merit or Flaw</summary>
+                        <details class="mc-trait-picker" data-panel-key="merit-examples">
+                            <summary>Choose an example or custom entry</summary>
+                            <button type="button" data-merit-template="">Custom Merit / Flaw</button>
+                            {{#each meritCatalog}}
+                            <button type="button" data-merit-template="{{id}}"><span>{{name}} · {{kind}} · {{#each values}}{{this}} / {{/each}} FP</span><span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{description}} · {{reference}}. DM approval required.</span></span></button>
+                            {{/each}}
+                        </details>
+                        <div class="mc-form-grid two-col">
+                            <label>Name<input data-mf-name type="text"></label>
+                            <label>Type<select data-mf-kind><option value="merit">Merit (cost)</option><option value="flaw">Flaw (bonus)</option></select></label>
+                            <label>Points<input data-mf-points type="number" min="1" max="20" step="1" value="1"></label>
+                            <label>Reference<input data-mf-reference type="text"></label>
+                            <label class="wide">Explanation<textarea data-mf-description></textarea></label>
+                            <label>Campaign Flaw bonus cap<input data-flaw-cap type="number" min="0" max="20" step="1" value="{{state.flawBonusCap}}"></label>
+                        </div>
+                        <button type="button" data-mf-add>Add Merit / Flaw</button>
+                    </details>
+                    </details>
+                </section>
+
+
+                {{#if hasSpecialtyChoices}}
+                <section class="mc-specialties-review mc-specialties-compact" aria-label="Required specialties">
+                    <div class="mc-specialties-heading">
+                        <strong>Required Specialties</strong>
+                        <small title="Attributes and Abilities rated 4+ require a specialty. Choose a suggestion or enter a custom specialty at no Freebie Point cost.">4+ ratings · no FP <i class="fa-solid fa-circle-info" aria-hidden="true"></i></small>
+                    </div>
+                    <div class="mc-specialty-grid">
+                        {{#each specialtyChoices}}
+                        <div class="mc-specialty-row">
+                            <label for="{{listId}}"><strong>{{name}}</strong> <small>{{kind}} · {{rating}} dots</small></label>
+                            <div class="mc-specialty-combo" data-specialty-combo>
+                                <input id="{{listId}}" type="text" data-specialty-input data-path="{{path}}" value="{{value}}" placeholder="Choose or type a specialty" autocomplete="off" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" required>
+                                <button type="button" class="mc-specialty-toggle" data-specialty-toggle aria-label="Show all {{name}} specialties" title="Show all specialty suggestions" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i></button>
+                                <template data-specialty-options>{{#each suggestions}}<span data-specialty-option>{{this}}</span>{{/each}}</template>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </section>{{/if}}
+                <h3 class="mc-section-title">Attributes <small>{{rules.freebieCosts.attribute}} FP per dot</small></h3>
+                <div class="mc-three-columns">
+                    {{#each attrGroups}}
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>{{name}}</h3><strong>{{priorityLabel}}</strong></div>
+                        {{#each attributes}}
+                        <div class="mc-rating-row">
+                            <div class="mc-rating-label">
+                                <span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}
+                                {{#if freebieCost}}<span class="mc-item-spend">{{freebieCost}} FP</span>{{/if}}
+                            </div>
+                            <div class="mc-dot-control">
+                                {{#each dots}}
+                                <button type="button"
+                                        class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if freebie}}freebie{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                        data-rating-kind="attribute"
+                                        data-rating-key="{{../id}}"
+                                        data-rating-value="{{value}}"
+                                        {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{tooltip}}"></button>
+                                {{/each}}
+                                <span class="mc-rating-value">{{value}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                </div>
+
+                <p class="mc-noncore-note">** Non-core and ratings 4+ outside Attributes require explicit DM approval.</p>
+                <h3 class="mc-section-title">Abilities <small>{{rules.freebieCosts.ability}} FP per dot</small></h3>
+                <div class="mc-three-columns">
+                    {{#each abilityGroups}}
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>{{name}}</h3><strong>{{priorityLabel}}</strong></div>
+                        {{#each abilities}}
+                        {{#if firstNonCore}}<div class="mc-extra-selected-label">GM-approved {{../name}} <small>Storyteller approval required</small></div>{{/if}}
+                        <div class="mc-rating-row">
+                            <div class="mc-rating-label">
+                                <span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}
+                                {{#if freebieCost}}<span class="mc-item-spend">{{freebieCost}} FP</span>{{/if}}
+                            </div>
+                            <div class="mc-dot-control">
+                                {{#each dots}}
+                                <button type="button"
+                                        class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if freebie}}freebie{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                        data-rating-kind="ability"
+                                        data-rating-key="{{../id}}"
+                                        data-rating-value="{{value}}"
+                                        {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{tooltip}}"></button>
+                                {{/each}}
+                                <span class="mc-rating-value">{{value}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
+
+                        <details class="mc-trait-picker mc-extra-picker" data-panel-key="extras-{{id}}">
+                            <summary><span><i class="fa-solid fa-plus" aria-hidden="true"></i> Additional / GM-approved {{name}}</span><small>{{extraAbilities.length}} available</small></summary>
+                            <div class="mc-extra-picker-note">Select an ability to add its dot track. GM approval is required; the ability costs no points until rated.</div>
+                            <div class="mc-extra-options">
+                            {{#each extraAbilities}}
+                                <div class="mc-extra-option">
+                                    <button type="button" data-add-ability="{{id}}" aria-label="Add {{name}} to this character"><i class="fa-solid fa-plus" aria-hidden="true"></i><span>{{name}}</span></button>
+                                    <span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}</span></span>
+                                </div>
+                            {{else}}
+                                <p class="mc-extra-empty">All available additions are already selected.</p>
+                            {{/each}}
+                            </div>
+                        </details>
+                    </div>
+                    {{/each}}
+                </div>
+
+                <h3 class="mc-section-title">Magic</h3>
+                <div class="mc-freebie-core-rows" aria-label="Arete and Willpower purchases">
+                    <div class="mc-freebie-core-row">
+                        <div class="mc-freebie-core-label"><strong>Arete</strong><small>{{rules.freebieCosts.arete}} FP / dot{{#if areteFreebieCost}} · {{areteFreebieCost}} spent{{/if}}</small></div>
+                        <div class="mc-dot-control large">
+                            {{#each areteDots}}
+                            <button type="button"
+                                    class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if freebie}}freebie{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                    data-rating-kind="core"
+                                    data-rating-key="arete"
+                                    data-rating-value="{{value}}"
+                                    {{#if disabled}}disabled{{/if}}
+                                    aria-label="{{tooltip}}"></button>
+                            {{/each}}
+                            <span class="mc-rating-value">{{areteValue}}</span>
+                        </div>
+                    </div>
+                    <div class="mc-freebie-core-row">
+                        <div class="mc-freebie-core-label"><strong>Willpower</strong><small>{{rules.freebieCosts.willpower}} FP / dot{{#if willpowerFreebieCost}} · {{willpowerFreebieCost}} spent{{/if}}</small></div>
+                        <div class="mc-dot-control wrap">
+                            {{#each willpowerDots}}
+                            <button type="button"
+                                    class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if freebie}}freebie{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                    data-rating-kind="core"
+                                    data-rating-key="willpower"
+                                    data-rating-value="{{value}}"
+                                    {{#if disabled}}disabled{{/if}}
+                                    aria-label="{{tooltip}}"></button>
+                            {{/each}}
+                            <span class="mc-rating-value">{{willpowerValue}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mc-split-section">
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>Spheres</h3><strong>{{rules.freebieCosts.sphere}} FP / dot</strong></div>
+                        <div class="mc-list-grid">
+                            {{#each spheres}}
+                            <div class="mc-rating-row {{#if affinitySelected}}affinity{{/if}}">
+                                <div class="mc-rating-label">
+                                    <span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}
+                                    {{#if affinitySelected}}<span class="mc-affinity-badge">Affinity</span>{{/if}}
+                                    {{#if freebieCost}}<span class="mc-item-spend">{{freebieCost}} FP</span>{{/if}}
+                                </div>
+                                <div class="mc-dot-control">
+                                    {{#each dots}}
+                                    <button type="button"
+                                            class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if freebie}}freebie{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                            data-rating-kind="sphere"
+                                            data-rating-key="{{../id}}"
+                                            data-rating-value="{{value}}"
+                                            {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{tooltip}}"></button>
+                                    {{/each}}
+                                    <span class="mc-rating-value">{{value}}</span>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>Backgrounds</h3><strong>{{rules.freebieCosts.background}} FP / dot</strong></div>
+                        <div class="mc-list-grid">
+                            {{#each backgrounds}}
+                            <div class="mc-rating-row">
+                                <div class="mc-rating-label">
+                                    <span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{name}}{{#if nonCore}} **{{/if}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}{{#if nonCore}}
+Non-core: explicit DM approval required.{{/if}}{{#if isAvatar}} Starting Quintessence equals the Avatar rating.{{/if}}</span></span>{{/if}}{{#if ratingLabel}}<small class="mc-rank-label">{{ratingLabel}}</small>{{/if}}{{#if dmApproval}}<small class="mc-dm-note">Rating 4+: explicit DM approval required.</small>{{/if}}
+                                    
+                                    {{#if freebieCost}}<span class="mc-item-spend">{{freebieCost}} FP</span>{{/if}}
+                                </div>
+                                <div class="mc-dot-control">
+                                    {{#each dots}}
+                                    <button type="button"
+                                            class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if freebie}}freebie{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                            data-rating-kind="background"
+                                            data-rating-key="{{../key}}"
+                                            data-rating-value="{{value}}"
+                                            {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{tooltip}}"></button>
+                                    {{/each}}
+                                    <span class="mc-rating-value">{{value}}</span>
+                                </div>
+                            </div>
+                            {{/each}}
+                            <div class="mc-background-selector" data-background-combo>
+                                <button type="button" class="mc-background-selector-trigger" data-background-toggle
+                                        aria-haspopup="listbox" aria-expanded="false"
+                                        {{#unless backgroundChoices.length}}disabled{{/unless}}>
+                                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                                    <span>{{#if backgroundChoices.length}}Add a Background{{else}}All available Backgrounds added{{/if}}</span>
+                                    {{#if backgroundChoices.length}}<small>{{backgroundChoices.length}} available · {{rules.freebieCosts.background}} FP / dot</small>{{/if}}
+                                    <i class="fa-solid fa-chevron-down mc-background-chevron" aria-hidden="true"></i>
+                                </button>
+                                <template data-background-options>
+                                    {{#each backgroundChoices}}<span data-background-option data-key="{{key}}" data-description="{{info}}">{{name}}</span>{{/each}}
+                                </template>
+                            </div>
+                            <details class="mc-custom-background mc-background-add" data-panel-key="custom-background">
+                                <summary><span><i class="fa-solid fa-plus" aria-hidden="true"></i> Add custom Background</span><small>GM approval</small></summary>
+                                <div class="mc-custom-background-body">
+                                    <label for="mc-custom-background-name">Name</label>
+                                    <input id="mc-custom-background-name" type="text" data-custom-background-name placeholder="Background name" autocomplete="off">
+                                    <label for="mc-custom-background-description">Description / agreed dot benefits</label>
+                                    <textarea id="mc-custom-background-description" data-custom-background-description rows="3" placeholder="Describe the Background and its Storyteller-approved benefits"></textarea>
+                                    <div class="mc-custom-background-actions">
+                                        <small>Adds a new Background at 0 dots.</small>
+                                        <button type="button" data-custom-background-add>Add Background</button>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mc-phase-action secondary-action">
+                    <button type="button" data-edit-base="4"><i class="fa-solid fa-pen"></i> Edit Base Character</button>
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepFinalReview}}
+            <section class="mc-panel">
+                <h2>Final Review</h2>
+                {{#if freebieEvaluation.freebiesRemaining}}
+                <div class="mc-final-unspent-warning" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                    <span><strong>{{freebieEvaluation.freebiesRemaining}} Freebie Points remain unspent.</strong> They will be lost when you create this Mage; they do not turn into XP. Return to Freebies to spend them, or confirm the loss when creating the character.</span>
+                </div>
+                {{/if}}
+
+                <section class="mc-merits" aria-label="Merits and Flaws review">
+                    <h3>Merits &amp; Flaws — Final Review</h3>
+                    <p>These choices were made during Freebie spending. All require DM approval; effects are not automatically applied to rolls. Return to the Freebies tab to make changes.</p>
+                    <p>Merit cost: {{meritTotals.merits}} FP · Flaw value: {{meritTotals.flaws}} FP · Credited bonus: {{meritTotals.bonus}} FP · Total budget: {{meritTotals.budget}} FP</p>
+                    {{#each meritsFlaws}}
+                    <div class="mc-selected-mf">
+                        <strong>Added {{kind}}: {{name}}</strong>
+                        <span>{{#if isMerit}}Cost{{else}}Bonus value{{/if}}: {{points}} FP</span>
+                        <span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{description}} · {{points}} FP. Explicit DM approval required.</span></span>
+                        <p>{{description}}</p><small>{{reference}}</small>
+                    </div>
+                    {{else}}
+                    <p>No Merits or Flaws selected.</p>
+                    {{/each}}
+                </section>
+
+
+                {{#if freebieEvaluation.valid}}
+                <div class="mc-validation good"><strong>Character allocations are valid.</strong> Base creation is complete and Freebie spending is legal. Review remaining points before creating this Mage.</div>
+                {{else}}
+                <div class="mc-validation bad"><strong>Character is not ready yet.</strong> Correct the Freebie-phase problem(s) below.</div>
+                {{/if}}
+
+                {{#if freebieEvaluation.errors.length}}
+                <div class="mc-review-issues">
+                    {{#each freebieEvaluation.errors}}
+                    <article class="mc-error-card">
+                        <div class="mc-error-tab">{{tab}} tab</div>
+                        <div class="mc-error-message">{{message}}</div>
+                        <div class="mc-error-fix"><strong>How to fix it:</strong> {{fix}}</div>
+                        {{#if canJump}}<button type="button" data-error-step="{{stepIndex}}">Go to {{tab}}</button>{{/if}}
+                    </article>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+
+                {{#if hasSpecialtyChoices}}
+                <section class="mc-specialties-review mc-specialties-compact" aria-label="Required specialties">
+                    <div class="mc-specialties-heading">
+                        <strong>Required Specialties</strong>
+                        <small title="Attributes and Abilities rated 4+ require a specialty. Choose a suggestion or enter a custom specialty at no Freebie Point cost.">4+ ratings · no FP <i class="fa-solid fa-circle-info" aria-hidden="true"></i></small>
+                    </div>
+                    <div class="mc-specialty-grid">
+                        {{#each specialtyChoices}}
+                        <div class="mc-specialty-row">
+                            <label for="{{listId}}"><strong>{{name}}</strong> <small>{{kind}} · {{rating}} dots</small></label>
+                            <div class="mc-specialty-combo" data-specialty-combo>
+                                <input id="{{listId}}" type="text" data-specialty-input data-path="{{path}}" value="{{value}}" placeholder="Choose or type a specialty" autocomplete="off" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" required>
+                                <button type="button" class="mc-specialty-toggle" data-specialty-toggle aria-label="Show all {{name}} specialties" title="Show all specialty suggestions" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i></button>
+                                <template data-specialty-options>{{#each suggestions}}<span data-specialty-option>{{this}}</span>{{/each}}</template>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </section>
+                {{/if}}
+
+                <div class="mc-review-grid">
+                    <div>
+                        <h3>{{state.identity.name}}</h3>
+                        <dl>
+                            <dt>Player</dt><dd>{{state.identity.player}}</dd><dt>Chronicle</dt><dd>{{state.identity.chronicle}}</dd><dt>Faction</dt><dd>{{state.identity.sect}}</dd><dt>Concept</dt><dd>{{state.identity.concept}}</dd>
+                            <dt>Affiliation</dt><dd>{{state.identity.affiliation}}</dd>
+                            <dt>Essence</dt><dd>{{state.identity.essence}}</dd>
+                            <dt>Arete</dt><dd>{{state.core.arete}}</dd>
+                            <dt>Willpower</dt><dd>{{state.core.willpower}}</dd>
+                            <dt>Avatar</dt><dd>{{avatarRating}}</dd>
+                            <dt>Starting Quintessence</dt><dd>{{quintessence}}</dd>
+                            <dt>Paradox</dt><dd>0</dd>
+                        </dl>
+                    </div>
+                    <div>
+                        <h3>Freebie Points</h3>
+                        <dl>
+                            <dt>Attributes</dt><dd>{{freebieEvaluation.freebieDots.attributes}} dots × {{rules.freebieCosts.attribute}} = {{freebieEvaluation.freebieBreakdown.attributes}}</dd>
+                            <dt>Abilities</dt><dd>{{freebieEvaluation.freebieDots.abilities}} dots × {{rules.freebieCosts.ability}} = {{freebieEvaluation.freebieBreakdown.abilities}}</dd>
+                            <dt>Spheres</dt><dd>{{freebieEvaluation.freebieDots.spheres}} dots × {{rules.freebieCosts.sphere}} = {{freebieEvaluation.freebieBreakdown.spheres}}</dd>
+                            <dt>Backgrounds</dt><dd>{{freebieEvaluation.freebieDots.backgrounds}} dots × {{rules.freebieCosts.background}} = {{freebieEvaluation.freebieBreakdown.backgrounds}}</dd>
+                            <dt>Arete</dt><dd>{{freebieEvaluation.freebieDots.arete}} dots × {{rules.freebieCosts.arete}} = {{freebieEvaluation.freebieBreakdown.arete}}</dd>
+                            <dt>Willpower</dt><dd>{{freebieEvaluation.freebieDots.willpower}} dots × {{rules.freebieCosts.willpower}} = {{freebieEvaluation.freebieBreakdown.willpower}}</dd>
+                            <dt><strong>Spent</strong></dt><dd><strong>{{freebieEvaluation.freebiesSpent}} / {{rules.freebies}}</strong></dd>
+                            <dt>Remaining</dt><dd>{{freebieEvaluation.freebiesRemaining}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+            {{/if}}
+        </main>
+
+        <aside class="mc-sidebar">
+            {{#if phaseBase}}
+            <section class="mc-sidebar-card">
+                <h3>Base Creation Progress</h3>
+                <div class="mc-status-line"><span>Attribute priorities</span><strong>{{#if attributePrioritiesReady}}Ready{{else}}Choose first{{/if}}</strong></div>
+                <div class="mc-status-line"><span>Ability priorities</span><strong>{{#if abilityPrioritiesReady}}Ready{{else}}Choose first{{/if}}</strong></div>
+                <div class="mc-status-line"><span>Spheres</span><strong>{{baseEvaluation.sphereStatus.used}} / {{rules.baseSphereDots}}</strong></div>
+                <div class="mc-status-line"><span>Backgrounds</span><strong>{{baseEvaluation.backgroundStatus.used}} / {{rules.baseBackgroundDots}}</strong></div>
+                <div class="mc-status-line"><span>Starting Quintessence</span><strong>{{quintessence}}</strong></div>
+                <div class="mc-status-line"><span>Items remaining</span><strong>{{baseEvaluation.errors.length}}</strong></div>
+            </section>
+
+            <section class="mc-sidebar-card">
+                <h3>What happens next?</h3>
+                <p>Finish the normal character first. Base Review then locks these ratings and opens a separate {{rules.freebies}}-point Freebie phase.</p>
+                <p><strong>No Freebie Points are being spent on the current pages.</strong></p>
+            </section>
+
+            {{else}}
+            <section class="mc-sidebar-card">
+                <h3>Freebie Budget</h3>
+                <div class="mc-budget-line"><span>Attributes</span><strong>{{freebieEvaluation.freebieBreakdown.attributes}} FP</strong></div>
+                <div class="mc-budget-line"><span>Abilities</span><strong>{{freebieEvaluation.freebieBreakdown.abilities}} FP</strong></div>
+                <div class="mc-budget-line"><span>Spheres</span><strong>{{freebieEvaluation.freebieBreakdown.spheres}} FP</strong></div>
+                <div class="mc-budget-line"><span>Merits</span><strong>{{meritTotals.merits}} FP</strong></div><div class="mc-budget-line"><span>Flaw bonus credited</span><strong>+{{meritTotals.bonus}} FP</strong></div><div class="mc-budget-line"><span>Backgrounds</span><strong>{{freebieEvaluation.freebieBreakdown.backgrounds}} FP</strong></div>
+                <div class="mc-budget-line"><span>Arete</span><strong>{{freebieEvaluation.freebieBreakdown.arete}} FP</strong></div>
+                <div class="mc-budget-line"><span>Willpower</span><strong>{{freebieEvaluation.freebieBreakdown.willpower}} FP</strong></div>
+                <hr>
+                <div class="mc-budget-total"><span>Spent</span><strong>{{freebieEvaluation.freebiesSpent}} / {{rules.freebies}}</strong></div>
+                <div class="mc-budget-remaining"><span>Remaining</span><strong>{{freebieEvaluation.freebiesRemaining}}</strong></div>
+            </section>
+
+            <section class="mc-sidebar-card mc-legend">
+                <h3>Dot colors</h3>
+                <div><span class="mc-legend-dot filled"></span><span>Locked base-character dot</span></div>
+                <div><span class="mc-legend-dot freebie"></span><span>Purchased with Freebie Points</span></div>
+                <div><span class="mc-legend-dot unavailable"></span><span>Cannot afford this target</span></div>
+                <p>Green dots are purchased Freebie dots. Red targets are disabled because the purchase would exceed the remaining budget.</p>
+            </section>
+
+            <section class="mc-sidebar-card">
+                <h3>Freebie Costs</h3>
+                <div class="mc-status-line"><span>Attribute</span><strong>{{rules.freebieCosts.attribute}}</strong></div>
+                <div class="mc-status-line"><span>Ability</span><strong>{{rules.freebieCosts.ability}}</strong></div>
+                <div class="mc-status-line"><span>Sphere</span><strong>{{rules.freebieCosts.sphere}}</strong></div>
+                <div class="mc-status-line"><span>Background</span><strong>{{rules.freebieCosts.background}}</strong></div>
+                <div class="mc-status-line"><span>Arete</span><strong>{{rules.freebieCosts.arete}}</strong></div>
+                <div class="mc-status-line"><span>Willpower</span><strong>{{rules.freebieCosts.willpower}}</strong></div>
+            </section>
+            {{/if}}
+        </aside>
+    </div>
+
+    <footer class="mc-footer">
+        <button type="button" class="mc-reset" data-reset-draft title="Clear all saved charamancer progress">
+            <i class="fa-solid fa-rotate-left"></i> Start Over
+        </button>
+        <button type="button" data-nav="back" {{#unless canBack}}disabled{{/unless}}><i class="fa-solid fa-arrow-left"></i> {{backLabel}}</button>
+        <div class="mc-footer-spacer"></div>
+        <span class="mc-autosave"><i class="fa-solid fa-floppy-disk"></i> Autosaved</span>
+        {{#if canNext}}
+        <button type="button" data-nav="next" {{#if nextDisabled}}disabled{{/if}}>{{nextLabel}} <i class="fa-solid fa-arrow-right"></i></button>
+        {{else}}
+        <button type="button" class="mc-create" data-create-mage {{#unless canCreate}}disabled{{/unless}}>
+            {{#if creating}}Creating…{{else}}<i class="fa-solid fa-wand-magic-sparkles"></i> Create Mage{{/if}}
+        </button>
+        {{/if}}
+    </footer>
+</div>

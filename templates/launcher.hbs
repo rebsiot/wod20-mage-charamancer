@@ -1,0 +1,71 @@
+<div class="mc-launcher-shell">
+    <header class="mc-launcher-header">
+        <i class="fa-solid fa-hat-wizard"></i>
+        <div>
+            <h2>Mage Character Tools</h2>
+            <p>Create a new Mage, import a web-built character, spend or add XP, or inspect traits and specialties.</p>
+        </div>
+    </header>
+
+    <div class="mc-launcher-actions">
+        <button type="button" class="mc-launcher-choice" data-create-new>
+            <i class="fa-solid fa-user-plus"></i>
+            <span>
+                <strong>Create New Mage</strong>
+                <small>Open the Foundry charamancer to build a new PC Mage step by step.</small>
+            </span>
+        </button>
+
+        <button type="button" class="mc-launcher-choice" data-import-web>
+            <i class="fa-solid fa-file-import"></i>
+            <span>
+                <strong>Import Web Character</strong>
+                <small>In the web charamancer choose Export Foundry JSON, then select that file here. Creates a new PC Mage.</small>
+            </span>
+        </button>
+
+        <button type="button" class="mc-launcher-choice" data-export-character><i class="fa-solid fa-file-export"></i><span><strong>Export Mage Character</strong>{{#if selectedMageName}}<small>Export {{selectedMageName}} as Foundry JSON for browser import or a backup.</small>{{else}}<small>Choose a PC Mage and download its Foundry JSON for the browser charamancer or a backup.</small>{{/if}}</span></button>
+
+        <button type="button" class="mc-launcher-choice" data-print-m20>
+            <i class="fa-solid fa-print"></i>
+            <span><strong>Print M20 Sheet / Save as PDF</strong>
+            {{#if selectedMageName}}<small>Print {{selectedMageName}}'s current Foundry character, including XP and filled dots.</small>
+            {{else}}<small>Select an owned Mage, then print its current character sheet or save it as a PDF.</small>{{/if}}</span>
+        </button>
+
+        <button type="button" class="mc-launcher-choice" data-advance-existing>
+            <i class="fa-solid fa-chart-line"></i>
+            <span>
+                <strong>Spend XP</strong>
+                {{#if selectedMageName}}
+                <small>Selected Mage: <strong>{{selectedMageName}}</strong>. Spend XP without changing the sheet until final approval.</small>
+                {{else}}
+                <small>Choose a current PC Mage, plan XP purchases, review the cost, then apply them together.</small>
+                {{/if}}
+            </span>
+        </button>
+
+        <button type="button" class="mc-launcher-choice" data-add-experience>
+            <i class="fa-solid fa-bolt"></i>
+            <span>
+                <strong>Add XP</strong>
+                {{#if selectedMageName}}
+                <small>Selected Mage: <strong>{{selectedMageName}}</strong>. Add earned XP with an automatic date row and a short story/session description.</small>
+                {{else}}
+                <small>Choose a current PC Mage and add earned XP in the same dated ledger format used by advancement.</small>
+                {{/if}}
+            </span>
+        </button>
+
+        <button type="button" class="mc-launcher-choice" data-mage-details><i class="fa-solid fa-circle-info"></i><span><strong>Mage Details / Specialties</strong><small>Descriptions, dot guidance, core aliases, non-core notes, Merits/Flaws and Unspent / Spent / Total Earned XP.</small></span></button>
+        {{#if canInstallGear}}
+        <button type="button" class="mc-launcher-choice" data-install-gear>
+            <i class="fa-solid fa-box-open"></i>
+            <span>
+                <strong>Install Starter Content</strong>
+                <small>Create reusable gear, natural attacks, and the core M20 Mage Backgrounds as ordinary world Items. Safe to run again; existing seeded content is not duplicated.</small>
+            </span>
+        </button>
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,323 @@
+<div class="mage-charamancer-shell mage-advancement-shell">
+    <p class="mc-noncore-note">** Non-core: explicit DM approval required.</p>
+    {{#if selectMode}}
+    <main class="mc-advancement-select">
+        <div class="mc-select-card">
+            <i class="fa-solid fa-hat-wizard mc-select-icon"></i>
+            <h2>Spend XP on a Mage</h2>
+            <p>Select a current WoD20 <strong>PC Mage</strong>. Nothing on the character changes until you reach Review and click <strong>Apply Advancement</strong>.</p>
+
+            {{#if hasMageActors}}
+            <label class="mc-field">
+                <span>Mage</span>
+                <select data-mage-select>
+                    {{#each mageActors}}
+                    <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </label>
+            {{#if controlledMageName}}<p class="mc-help">The selected token, <strong>{{controlledMageName}}</strong>, is preselected.</p>{{/if}}
+            <button type="button" class="mc-primary-action" data-load-mage><i class="fa-solid fa-chart-line"></i> Load Mage & Spend XP</button>
+            {{else}}
+            <div class="mc-validation error"><strong>No editable PC Mages were found.</strong> Create or convert a character to the current WoD20 PC Mage sheet first.</div>
+            {{/if}}
+        </div>
+    </main>
+    {{else}}
+
+    <nav class="mc-steps">
+        {{#each steps}}
+        <button type="button" class="mc-step {{#if active}}active{{/if}} {{#if complete}}complete{{/if}}" data-step-index="{{@index}}">
+            <span class="mc-step-number">{{number}}</span>
+            <span>{{label}}</span>
+        </button>
+        {{/each}}
+    </nav>
+
+    <section class="mc-xp-quick-rules">
+        <div><strong>Attribute</strong><span>current × {{xpRules.attributeMultiplier}}</span></div>
+        <div><strong>Ability</strong><span>new {{xpRules.newAbility}} XP; raise current × {{xpRules.abilityMultiplier}}</span></div>
+        <div><strong>New Sphere</strong><span>{{xpRules.newSphere}} XP</span></div>
+        <div><strong>Affinity Sphere</strong><span>current × {{xpRules.affinitySphereMultiplier}}</span></div>
+        <div><strong>Other Sphere</strong><span>current × {{xpRules.otherSphereMultiplier}}</span></div>
+        <div><strong>Arete</strong><span>current × {{xpRules.areteMultiplier}}</span></div>
+        <div><strong>Willpower</strong><span>current × {{xpRules.willpowerMultiplier}}</span></div>
+        <div class="mc-xp-budget-top"><strong>{{plan.remaining}} XP left</strong><span>{{plan.totalCost}} planned / {{xp.available}} unspent</span></div>
+    </section>
+
+    <div class="mc-layout">
+        <main class="mc-main">
+            {{#if stepAttributes}}
+            <section class="mc-panel">
+                <h2>Attributes</h2>
+                <div class="mc-instructions">
+                    Existing dots are locked. <strong>Green dots are XP purchases.</strong> Hover any unspent dot to see exactly what that step costs. Click the highest green dot again to refund it from the plan.
+                </div>
+
+                <div class="mc-three-columns">
+                    {{#each attrGroups}}
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>{{name}}</h3><strong>current rating × 4</strong></div>
+                        {{#each attributes}}
+                        <div class="mc-rating-row">
+                            <div class="mc-rating-label">
+                                <span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{#if nonCore}}** {{/if}}{{name}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}</span></span>{{/if}}{{#if ratingLabel}}<small>{{ratingLabel}}</small>{{/if}}
+                                {{#if purchaseCost}}<span class="mc-item-spend">{{purchaseCost}} XP</span>{{/if}}
+                            </div>
+                            <div class="mc-dot-control">
+                                {{#each dots}}
+                                <button type="button"
+                                        class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if xp}}freebie xp-dot{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                        data-rating-kind="attribute"
+                                        data-rating-key="{{../id}}"
+                                        data-rating-value="{{value}}"
+                                        {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{tooltip}}"></button>
+                                {{/each}}
+                                <span class="mc-rating-value">{{value}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepAbilities}}
+            <section class="mc-panel">
+                <h2>Abilities</h2>
+                <div class="mc-instructions">
+                    A brand-new Ability (0 → 1) costs <strong>{{xpRules.newAbility}} XP</strong>. After that, each new dot costs the current rating × {{xpRules.abilityMultiplier}}. Green dots are only planned until you apply the advancement.
+                </div>
+
+                <div class="mc-three-columns">
+                    {{#each abilityGroups}}
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>{{name}}</h3><strong>new 3; raise current × 2</strong></div>
+                        {{#each abilities}}
+                        <div class="mc-rating-row">
+                            <div class="mc-rating-label">
+                                <span class="mc-rating-name {{#if nonCore}}mc-noncore{{/if}}">{{#if nonCore}}** {{/if}}{{name}}</span>{{#if info}}<span class="mc-info" tabindex="0" aria-label="About {{name}}">i<span class="mc-tip">{{info}}</span></span>{{/if}}{{#if ratingLabel}}<small>{{ratingLabel}}</small>{{/if}}
+                                {{#if purchaseCost}}<span class="mc-item-spend">{{purchaseCost}} XP</span>{{/if}}
+                            </div>
+                            <div class="mc-dot-control">
+                                {{#each dots}}
+                                <button type="button"
+                                        class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if xp}}freebie xp-dot{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                        data-rating-kind="ability"
+                                        data-rating-key="{{../id}}"
+                                        data-rating-value="{{value}}"
+                                        {{#if disabled}}disabled{{/if}}
+                                        aria-label="{{tooltip}}"></button>
+                                {{/each}}
+                                <span class="mc-rating-value">{{value}}</span>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepMagic}}
+            <section class="mc-panel">
+                <h2>Spheres, Arete & Willpower</h2>
+                <div class="mc-instructions">
+                    New Spheres cost <strong>{{xpRules.newSphere}} XP</strong>. Existing Affinity Sphere dots cost current × {{xpRules.affinitySphereMultiplier}}; other Spheres cost current × {{xpRules.otherSphereMultiplier}}. A Sphere cannot exceed planned Arete, so raise Arete first when necessary.
+                </div>
+
+                <label class="mc-affinity-selector">
+                    <span><strong>Affinity Sphere used for XP pricing</strong><small>Detected from the Mage when possible. Change this if the sheet does not identify it correctly.</small></span>
+                    <select data-affinity-sphere>
+                        {{#each affinityOptions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+                    </select>
+                </label>
+
+                <div class="mc-core-grid">
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>Arete</h3><strong>current × {{xpRules.areteMultiplier}}</strong></div>
+                        {{#if aretePurchaseCost}}<div class="mc-item-spend inline-spend">{{aretePurchaseCost}} XP planned</div>{{/if}}
+                        <div class="mc-dot-control large">
+                            {{#each areteDots}}
+                            <button type="button"
+                                    class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if xp}}freebie xp-dot{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                    data-rating-kind="core" data-rating-key="arete" data-rating-value="{{value}}"
+                                    {{#if disabled}}disabled{{/if}} aria-label="{{tooltip}}"></button>
+                            {{/each}}
+                            <span class="mc-rating-value">{{areteValue}}</span>
+                        </div>
+                        <div class="mc-validation warning compact"><strong>Seeking:</strong> Raising Arete normally requires Storyteller approval and a successful Seeking. This tool records the XP purchase but does not adjudicate it.</div>
+                    </div>
+
+                    <div class="mc-rating-group">
+                        <div class="mc-group-heading"><h3>Willpower</h3><strong>current × {{xpRules.willpowerMultiplier}}</strong></div>
+                        {{#if willpowerPurchaseCost}}<div class="mc-item-spend inline-spend">{{willpowerPurchaseCost}} XP planned</div>{{/if}}
+                        <div class="mc-dot-control large">
+                            {{#each willpowerDots}}
+                            <button type="button"
+                                    class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if xp}}freebie xp-dot{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                    data-rating-kind="core" data-rating-key="willpower" data-rating-value="{{value}}"
+                                    {{#if disabled}}disabled{{/if}} aria-label="{{tooltip}}"></button>
+                            {{/each}}
+                            <span class="mc-rating-value">{{willpowerValue}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="mc-section-title">Spheres</h3>
+                <div class="mc-three-columns mc-sphere-columns">
+                    {{#each spheres}}
+                    <div class="mc-rating-row mc-sphere-row">
+                        <div class="mc-rating-label">
+                            <span class="mc-rating-name">{{name}} {{#if affinity}}<span class="mc-affinity-badge">Affinity</span>{{/if}}</span>
+                            {{#if purchaseCost}}<span class="mc-item-spend">{{purchaseCost}} XP</span>{{/if}}
+                            <small>{{formula}}</small>
+                        </div>
+                        <div class="mc-dot-control">
+                            {{#each dots}}
+                            <button type="button"
+                                    class="mc-dot {{#if filled}}filled{{/if}} {{#if base}}base-dot{{/if}} {{#if xp}}freebie xp-dot{{/if}} {{#if unavailable}}unavailable{{/if}}"
+                                    data-rating-kind="sphere" data-rating-key="{{../id}}" data-rating-value="{{value}}"
+                                    {{#if disabled}}disabled{{/if}} aria-label="{{tooltip}}"></button>
+                            {{/each}}
+                            <span class="mc-rating-value">{{value}}</span>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+
+                <div class="mc-validation warning compact mc-background-xp-note">
+                    <strong>Backgrounds are not automated in XP mode yet.</strong> M20 treats Background advancement as Storyteller-facing and tables vary on how it is purchased. Adjust approved Background changes directly on the sheet for now.
+                </div>
+            </section>
+            {{/if}}
+
+            {{#if stepReview}}
+            <section class="mc-panel">
+                <h2>Review XP Spending</h2>
+
+                {{#if plan.errors.length}}
+                <div class="mc-validation error">
+                    <strong>Cannot apply yet.</strong>
+                    {{#each plan.errors}}<div>{{this}}</div>{{/each}}
+                </div>
+                {{else}}
+                    {{#if plan.purchases.length}}
+                    <div class="mc-validation good"><strong>Ready.</strong> Nothing changes on {{actorName}} until you click Apply Advancement below.</div>
+                    {{else}}
+                    <div class="mc-validation warning"><strong>No XP purchases selected yet.</strong> Use the other tabs to add one or more green advancement dots.</div>
+                    {{/if}}
+                {{/if}}
+
+                {{#each plan.warnings}}
+                <div class="mc-validation warning compact">{{this}}</div>
+                {{/each}}
+
+                {{#if hasSpecialtyChoices}}
+                <section class="mc-specialties-review">
+                    <h3>Required Specialties</h3>
+                    <p>Traits rated 4 or higher need a specialty before spending XP. Choose a suggestion or enter your own; specialties cost no XP.</p>
+                    <div class="mc-specialty-grid">
+                        {{#each specialtyChoices}}
+                        <label class="mc-specialty-row">
+                            <span><strong>{{name}}</strong> <small>{{kind}} · now {{rating}} dots</small></span>
+                            <input type="text" data-path="{{path}}" value="{{value}}" placeholder="Required specialty for {{name}}" list="{{listId}}"><datalist id="{{listId}}">{{#each suggestions}}<option value="{{this}}"></option>{{/each}}</datalist>
+                        </label>
+                        {{/each}}
+                    </div>
+                </section>
+                {{/if}}
+
+                <section class="mc-advancement-record">
+                    <div class="mc-advancement-record-heading">
+                        <div>
+                            <h3>Advancement Ledger Header</h3>
+                            <p>WoD20 shows newest XP entries first. The module will add these 0-XP header rows last so they appear above the purchase lines.</p>
+                        </div>
+                        <div class="mc-ledger-date-preview">
+                            <small>Automatic date</small>
+                            <strong>{{advancementDate}}</strong>
+                            <span>0 XP</span>
+                        </div>
+                    </div>
+                    <label class="mc-story-note-field">
+                        <span><strong>Story / session note</strong> <small>optional · maximum {{storyNoteMax}} characters</small></span>
+                        <div class="mc-story-note-input">
+                            <input type="text" data-path="storyNote" maxlength="{{storyNoteMax}}" value="{{state.storyNote}}" placeholder="Nephandus aftermath">
+                            <span data-story-count>{{storyNoteLength}} / {{storyNoteMax}}</span>
+                        </div>
+                    </label>
+                    <div class="mc-ledger-preview">
+                        <small>XP ledger preview</small>
+                        <div><span>{{advancementDate}}</span><strong>0</strong></div>
+                        <div class="mc-story-preview-row {{#unless state.storyNote}}hidden{{/unless}}" data-story-preview-row><span data-story-preview>{{state.storyNote}}</span><strong>0</strong></div>
+                        {{#each plan.purchases}}<div><span>&mdash;&mdash; {{name}} {{from}} → {{to}}</span><strong>{{cost}}</strong></div>{{/each}}
+                    </div>
+                </section>
+
+                <div class="mc-xp-review-table">
+                    <div class="mc-xp-review-head"><span>Purchase</span><span>Change</span><span>Cost</span></div>
+                    {{#each plan.purchases}}
+                    <div class="mc-xp-review-row">
+                        <span><strong>{{name}}</strong>{{#if affinity}} <small>Affinity</small>{{/if}}</span>
+                        <span>{{from}} → {{to}}</span>
+                        <span><strong>{{cost}} XP</strong></span>
+                    </div>
+                    {{/each}}
+                    {{#unless plan.purchases.length}}<div class="mc-empty-plan">No purchases selected.</div>{{/unless}}
+                </div>
+
+                <div class="mc-xp-review-total">
+                    <div><span>Unspent before spending</span><strong>{{xp.available}} XP</strong></div>
+                    <div><span>Planned spending</span><strong>{{plan.totalCost}} XP</strong></div>
+                    <div><span>Remaining afterward</span><strong>{{plan.remaining}} XP</strong></div>
+                </div>
+            </section>
+            {{/if}}
+        </main>
+
+        <aside class="mc-sidebar">
+            <section class="mc-sidebar-card">
+                <h3>{{actorName}}</h3><p class="mc-help">Unspent + Spent = Total Earned</p>
+                <div class="mc-status-line"><span>Total Earned</span><strong>{{xp.earned}}</strong></div>
+                <div class="mc-status-line"><span>Spent</span><strong>{{xp.spent}}</strong></div>
+                <hr>
+                <div class="mc-budget-total"><span>Unspent</span><strong>{{xp.available}} XP</strong></div>
+                <div class="mc-budget-line"><span>This plan</span><strong>{{plan.totalCost}} XP</strong></div>
+                <div class="mc-budget-remaining"><span>Remaining</span><strong>{{plan.remaining}} XP</strong></div>
+                {{#if xp.uncommittedSpentItems}}<p class="mc-help">{{xp.uncommittedSpentItems}} Spent Experience record(s) are unchecked in WoD20 and are not deducted.</p>{{/if}}
+                {{#unless xp.available}}<div class="mc-validation warning compact"><strong>No spendable XP found.</strong> Add Gained Experience entries to this Mage's WoD20 XP ledger before purchasing advancement.</div>{{/unless}}
+            </section>
+
+            <section class="mc-sidebar-card mc-legend">
+                <h3>Dot colors</h3>
+                <div><span class="mc-legend-dot filled"></span><span>Current character rating</span></div>
+                <div><span class="mc-legend-dot freebie"></span><span>Planned XP purchase</span></div>
+                <div><span class="mc-legend-dot unavailable"></span><span>Unavailable / cannot afford</span></div>
+            </section>
+
+            <section class="mc-sidebar-card">
+                <h3>XP Ledger</h3>
+                <p>The tool reads WoD20 <strong>Gained Experience</strong> and checked <strong>Spent Experience</strong> items. Applying creates one spent row per purchase, then optional 0-XP story and automatic 0-XP date rows so the date/story appear above the batch in the ledger.</p>
+            </section>
+
+            <button type="button" class="mc-change-mage" data-change-mage><i class="fa-solid fa-user-gear"></i> Choose Different Mage</button>
+        </aside>
+    </div>
+
+    <footer class="mc-footer">
+        <button type="button" data-nav="back" {{#unless canBack}}disabled{{/unless}}><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <div class="mc-footer-spacer"></div>
+        <span class="mc-xp-footer-budget"><strong>{{plan.remaining}} XP remaining</strong> after {{plan.totalCost}} XP planned</span>
+        {{#if canNext}}
+        <button type="button" data-nav="next">Next <i class="fa-solid fa-arrow-right"></i></button>
+        {{else}}
+        <button type="button" class="mc-create" data-apply-advancement {{#unless canApply}}disabled{{/unless}}>
+            {{#if applying}}Applying…{{else}}<i class="fa-solid fa-check"></i> Apply Advancement ({{plan.totalCost}} XP){{/if}}
+        </button>
+        {{/if}}
+    </footer>
+    {{/if}}
+</div>

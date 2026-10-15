@@ -1,0 +1,50 @@
+name: Package and release Charamancer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - module.json
+      - .github/workflows/release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Validate source manifest
+        run: python3 tools/package_release.py --check
+      - name: Check JavaScript syntax
+        run: |
+          find scripts -name '*.js' -type f -print0 | while IFS= read -r -d '' file; do
+            node --check --input-type=module < "$file"
+          done
+      - name: Package installable ZIPs
+        run: python3 tools/package_release.py
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mage-charamancer-package
+          path: dist/*.zip
+      - name: Publish versioned release (if new)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="$(python3 -c 'import json; print(json.load(open("module.json"))["version"])')"
+          TAG="v${VERSION}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists: not overwriting."
+            exit 0
+          fi
+          gh release create "$TAG" \
+            "dist/wod20-mage-charamancer.zip" \
+            "dist/wod20-mage-charamancer-${VERSION}.zip" \
+            --target "$GITHUB_SHA" \
+            --title "Mage Charamancer ${TAG}" \
+            --notes "Foundry Mage Charamancer ${VERSION}. Full installable module ZIP; see README and docs/GITHUB-RELEASES.md for upgrade, rollback and test status."

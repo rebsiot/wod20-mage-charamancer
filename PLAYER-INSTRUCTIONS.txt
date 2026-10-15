@@ -1,0 +1,57 @@
+MAGE CHARACTER TOOLS — PLAYER TRANSFER GUIDE
+Browser 0.1.24 / Foundry module 0.5.7
+
+OPEN THE FOUNDRY TOOLS
+On the left toolbar, select Token Controls and click the wizard hat (Mage Character Tools).
+The main panel includes Create New Mage, Import Web Character, Export Mage Character, Mage Details / Specialties, Add XP and Spend XP.
+Select your PC Mage token first to use it for XP actions, or choose your character when prompted.
+
+BROWSER TO FOUNDRY — FIRST IMPORT
+1. Create or open your character in the browser charamancer.
+2. On the character sheet, click Export Foundry JSON. Keep the downloaded .json file.
+3. In Foundry, click the wizard hat, then Import Web Character.
+4. Select the .json file. The module creates a NEW PC Mage actor.
+5. Check the import notice for counts of non-core Talents, Skills and Knowledges. Open Mage Details and verify the ratings, Player, Chronicle, Backgrounds, Merits/Flaws, specialties and XP.
+Foundry 0.5.6 verifies/restores non-core Abilities during module import; the older native Actor Import Data menu does not run that repair. Imports create NEW actors and do not overwrite previous ones. Verify the replacement before deleting incomplete copies.
+You need permission to create Actors; otherwise send the JSON to the GM for import.
+
+FOUNDRY TO BROWSER
+1. In Foundry, click the wizard hat to open Mage Character Tools.
+2. Click Export Mage Character. If a Mage token is selected, its world actor is exported; otherwise choose your Mage and click Export Mage Character.
+3. Keep the downloaded .json file.
+4. On the browser charamancer home screen, click Import JSON / PDF and select that file.
+5. A new local character copy appears. Check Unspent, Spent and Total Earned XP, plus your character details.
+The browser copy and Foundry actor are separate. Changes do not sync automatically.
+Export requires actor ownership or GM access. You can also right-click your Mage in Foundry's Actors directory and use Export Data.
+Foundry export/import menu reference: https://foundryvtt.com/article/actors/
+
+RETURNING AN UPDATED BROWSER COPY TO FOUNDRY
+Export Foundry JSON again after your browser changes.
+For a new review copy, use Mage Character Tools > Import Web Character. This creates another actor.
+To replace the existing actor, ask the GM to review the changes. Export its current data as a backup first, then right-click the intended actor in the Actors directory > Import Data > choose the updated JSON.
+Native Import Data OVERWRITES that actor's data; it does not merge changes. The GM should check actor ownership and token/sheet settings afterward.
+Use the latest Foundry export as your browser starting point if XP, gear or character data has changed during play.
+
+PDFS
+Export Character Sheet PDF creates the editable sheet for printing and PDF use.
+Import JSON / PDF can read a PDF created by this charamancer when its embedded character data is intact.
+Foundry's Import Web Character accepts Foundry JSON, not PDFs. For a PDF character, import into the browser first, then choose Export Foundry JSON.
+
+WORKFLOW NOTES
+Pick one current copy for XP spending and updates so the two versions do not drift.
+Browser saves are local to the browser/device/site. Keep an exported JSON or charamancer PDF backup before switching devices or clearing browser storage.
+Foundry-only abilities outside the browser catalog remain in the imported Foundry source for re-export; they may not appear as editable web/PDF traits. Review custom entries with the GM.
+Non-core choices, custom Backgrounds and Merits/Flaws require DM approval. Creation budgets and specialty requirements still apply.
+
+OPTIONAL STARTING ARETE 2 (PCS)
+On Concept, check "Start PCs at Arete 2 for free (GM option)" only if approved by your GM. It costs 0 Freebie Points for Arete 2; increasing it to 3 still costs 4 Freebie Points. Foundry creation has a matching Concept checkbox. Existing characters are unchanged.
+
+GM QUICK NPC MODE (BROWSER)
+Click "Quick NPC · Fill Dots" from browser home. Enter a name, click any Attribute, Ability, Sphere, Background, or Advantage dots, and add non-core Abilities or custom Backgrounds as needed. There are no PC allocation, Freebie, or XP budgets. Click Save NPC to keep it locally; "Export Foundry JSON" and "Export PDF" are also available directly while editing. After save you can choose Edit NPC Dots or either export. Use Mage Character Tools > Import Web Character in Foundry for JSON. The importer creates a new PC-type Mage actor with an NPC marker, because WoD20 Mage support expects the PC actor type. Do not use the deprecated Mage actor type. NPC imports do not merge with existing actors.
+
+PRINT AN M20 CHARACTER SHEET (FOUNDRY v0.5.8+)
+From Token Controls > Mage Character Tools, choose Print M20 Sheet / Save as PDF. If you have a Mage token selected, that Mage prints; otherwise select your Mage from the character chooser. You can also use Print M20 Sheet on the character's own Foundry sheet header.
+The character sheet opens in a new browser tab. Click Print / Save as PDF, choose Save as PDF as the print destination, use US Letter portrait, and set scale to 100%. Allow popups for your Foundry website if necessary.
+Printing reads the CURRENT Foundry actor and doesn't change XP or character traits. It is a printable document, not the standalone browser app's fillable/importable PDF. Use Export Mage Character to save a portable Foundry JSON backup.
+
+Foundry 0.5.10: Select Merits and Flaws on the Freebies tab, after you finish the base character. Final Review lists those choices but does not edit them.

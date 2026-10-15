@@ -1,0 +1,10 @@
+# Local development, generated builds and editor files
+/dist/
+__pycache__/
+*.pyc
+*.log
+node_modules/
+.DS_Store
+Thumbs.db
+.env
+.env.*

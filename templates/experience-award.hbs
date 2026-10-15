@@ -1,0 +1,89 @@
+<div class="mage-charamancer-shell mage-xp-award-shell">
+    {{#if selectMode}}
+    <main class="mc-advancement-select">
+        <div class="mc-select-card">
+            <i class="fa-solid fa-bolt mc-select-icon"></i>
+            <h2>Add XP</h2>
+            <p>Select a current WoD20 <strong>PC Mage</strong>. The tool adds earned XP to the native WoD20 Experience ledger.</p>
+
+            {{#if hasMageActors}}
+            <label class="mc-field">
+                <span>Mage</span>
+                <select data-mage-select>
+                    {{#each mageActors}}
+                    <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </label>
+            {{#if controlledMageName}}<p class="mc-help">The selected token, <strong>{{controlledMageName}}</strong>, is preselected.</p>{{/if}}
+            <button type="button" class="mc-primary-action" data-load-mage><i class="fa-solid fa-bolt"></i> Load Mage</button>
+            {{else}}
+            <div class="mc-validation error"><strong>No editable PC Mages were found.</strong> Create or convert a character to the current WoD20 PC Mage sheet first.</div>
+            {{/if}}
+        </div>
+    </main>
+    {{else}}
+    <main class="mc-xp-award-main">
+        <section class="mc-xp-award-card">
+            <header class="mc-xp-award-header">
+                <div>
+                    <h2>Add XP to {{actorName}}</h2>
+                    <p>Add earned XP without opening the native Experience dialog. The date is automatic.</p>
+                </div>
+                <button type="button" data-change-mage><i class="fa-solid fa-user-gear"></i> Choose Different Mage</button>
+            </header>
+
+            <p class="mc-help">Unspent + Spent = Total Earned</p><div class="mc-xp-award-summary">
+                <div><span>Total Earned</span><strong>{{xp.earned}}</strong></div>
+                <div><span>Spent</span><strong>{{xp.spent}}</strong></div>
+                <div><span>Unspent now</span><strong>{{xp.available}}</strong></div>
+                <div><span>Unspent after</span><strong data-resulting-xp>{{xp.available}}</strong></div>
+            </div>
+
+            <div class="mc-xp-award-form">
+                <label class="mc-field">
+                    <span>Experience gained</span>
+                    <input type="number" min="1" max="999" step="1" inputmode="numeric" data-award-amount value="{{rawAmount}}" placeholder="5">
+                    <small>Positive whole number.</small>
+                </label>
+
+                <label class="mc-story-note-field">
+                    <span><strong>Story / session note</strong> <small>optional - maximum {{storyNoteMax}} characters</small></span>
+                    <div class="mc-story-note-input">
+                        <input type="text" maxlength="{{storyNoteMax}}" data-award-story value="{{storyNote}}" placeholder="Blew up STL">
+                        <span data-story-count>{{storyNoteLength}} / {{storyNoteMax}}</span>
+                    </div>
+                </label>
+            </div>
+
+            <label class="mc-award-long-note"><strong>Long session note (optional)</strong>
+                <small>Append to this Mage's biography with the award date; leave empty for ledger-only XP.</small>
+                <textarea data-award-biography rows="3" maxlength="4000" placeholder="Story developments, consequences, character milestones...">{{biographyNote}}</textarea>
+            </label>
+
+            <section class="mc-xp-award-preview">
+                <div class="mc-advancement-record-heading">
+                    <div>
+                        <h3>Earned Experience Ledger Preview</h3>
+                        <p>Each XP award is one dated ledger entry with a short description and its XP amount.</p>
+                    </div>
+                </div>
+
+                <div class="mc-ledger-preview">
+                    <div><span>{{awardDate}} — <span data-award-preview-story>{{previewStory}}</span></span><strong data-award-preview-amount>{{amount}}</strong></div>
+                </div>
+            </section>
+
+            <div class="mc-validation info compact">
+                <strong>Ledger format:</strong> one date, short note, and XP amount per award. An optional long note goes into the biography.
+            </div>
+
+            <footer class="mc-xp-award-footer">
+                <button type="button" class="mc-create" data-apply-award {{#unless canApply}}disabled{{/unless}}>
+                    {{#if applying}}Applying...{{else}}<i class="fa-solid fa-bolt"></i> <span data-award-button-label>{{#if amount}}Add {{amount}} XP{{else}}Add XP{{/if}}</span>{{/if}}
+                </button>
+            </footer>
+        </section>
+    </main>
+    {{/if}}
+</div>

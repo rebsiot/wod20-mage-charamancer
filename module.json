@@ -1,0 +1,40 @@
+{
+  "id": "wod20-mage-charamancer",
+  "title": "WoD20 Mage Charamancer",
+  "description": "Guided Mage creation, XP and interactive fillable M20 character PDF from Foundry.",
+  "version": "0.5.33",
+  "authors": [
+    {
+      "name": "Rick"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "worldofdarkness",
+        "type": "system",
+        "compatibility": {
+          "minimum": "7.3.1"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/charamancer.css"
+  ],
+  "scripts": [
+    "scripts/pdf-lib.min.js",
+    "scripts/pdf-fonts.js",
+    "scripts/fillable-pdf.js"
+  ],
+  "url": "https://github.com/rebsiot/wod20-mage-charamancer",
+  "manifest": "https://raw.githubusercontent.com/rebsiot/wod20-mage-charamancer/main/module.json",
+  "download": "https://github.com/rebsiot/wod20-mage-charamancer/releases/latest/download/wod20-mage-charamancer.zip"
+}

@@ -1,0 +1,10 @@
+<div class="mc-details-body">
+<h2>Export or Print Mage Character</h2>
+<p>Export your Mage as JSON or print its current M20 character sheet directly from Foundry. In the browser charamancer choose <strong>Import JSON / PDF</strong> and select this file.</p>
+{{#if hasActors}}
+<label>Choose a PC Mage <select data-export-mage-choice>{{#each actors}}<option value="{{id}}">{{name}}</option>{{/each}}</select></label>
+<button type="button" data-print-mage><i class="fa-solid fa-print"></i> Print M20 Sheet / PDF</button>
+<button type="button" data-export-mage><i class="fa-solid fa-file-export"></i> Export Mage Character</button>
+{{else}}<p>No PC Mages you own are available. Ask the GM to assign ownership or export the character for you.</p>{{/if}}
+<p class="mc-description">The export includes the actor's native items, module metadata and XP records. Importing into the browser creates a separate copy; it does not keep the two versions synchronized.</p>
+</div>

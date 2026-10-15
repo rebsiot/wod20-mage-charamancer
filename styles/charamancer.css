@@ -1,0 +1,2638 @@
+.wod20-mage-charamancer .window-content {
+    padding: 0;
+}
+
+.mage-charamancer-shell {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text-primary, inherit);
+}
+
+/* -------------------------------------------------------------------------
+   Step navigation
+   ------------------------------------------------------------------------- */
+
+.mc-steps {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.mc-step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    opacity: 0.72;
+}
+
+.mc-step.active {
+    opacity: 1;
+    font-weight: 700;
+    outline: 2px solid color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.mc-step.complete {
+    opacity: 0.9;
+}
+
+.mc-step-number {
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    font-size: 11px;
+}
+
+.mc-step-error-count {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 10px;
+    display: inline-grid;
+    place-items: center;
+    background: #9d2f2f;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.mc-step-error-count.advisory {
+    background: #b8860b;
+    color: #fff7d6;
+}
+
+.mc-draft-note {
+    padding: 7px 12px;
+    border-bottom: 1px solid color-mix(in srgb, #3d8b4b 45%, transparent);
+    background: color-mix(in srgb, #3d8b4b 12%, transparent);
+    font-size: 12px;
+}
+
+/* -------------------------------------------------------------------------
+   Quick rules - always across the top
+   ------------------------------------------------------------------------- */
+
+.mc-quick-rules {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(125px, 1fr)) minmax(155px, 1.1fr);
+    gap: 6px;
+    padding: 8px 10px 9px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.mc-quick-rule,
+.mc-quick-budget {
+    min-width: 0;
+    padding: 7px 9px;
+    border: 1px solid color-mix(in srgb, currentColor 17%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mc-quick-rule strong,
+.mc-quick-budget strong {
+    font-size: 12px;
+}
+
+.mc-quick-rule span,
+.mc-quick-budget span {
+    font-size: 11px;
+    opacity: 0.78;
+}
+
+.mc-quick-budget {
+    border-color: color-mix(in srgb, #3d8b4b 60%, currentColor 20%);
+    background: color-mix(in srgb, #3d8b4b 10%, transparent);
+}
+
+.mc-quick-budget.bad {
+    border-color: #b84545;
+    background: color-mix(in srgb, #b84545 16%, transparent);
+}
+
+.mc-quick-costs {
+    grid-column: 1 / -1;
+    padding: 5px 8px 0;
+    font-size: 11px;
+    line-height: 1.35;
+    opacity: 0.86;
+}
+
+/* -------------------------------------------------------------------------
+   Main layout
+   ------------------------------------------------------------------------- */
+
+.mc-layout {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+}
+
+.mc-main {
+    overflow: auto;
+    padding: 12px 14px 20px;
+}
+
+.mc-sidebar {
+    overflow: auto;
+    padding: 12px;
+    border-left: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.mc-panel h2 {
+    margin-top: 0;
+    margin-bottom: 4px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    padding-bottom: 6px;
+    font-size: 1.8rem;
+    line-height: 1.1;
+}
+
+.mc-tab-summary {
+    margin: -2px 0 10px;
+    font-size: 12px;
+    line-height: 1.35;
+    opacity: 0.82;
+}
+
+.mc-instructions {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-left: 4px solid color-mix(in srgb, currentColor 48%, transparent);
+    border-radius: 4px;
+    background: color-mix(in srgb, currentColor 6%, transparent);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.mc-instructions.compact {
+    padding: 7px 10px;
+}
+
+.mc-section-help {
+    margin: -5px 0 8px;
+    font-size: 12px;
+    opacity: 0.82;
+}
+
+/* -------------------------------------------------------------------------
+   Current-tab status
+   ------------------------------------------------------------------------- */
+
+.mc-current-issues {
+    box-sizing: border-box;
+    height: 58px;
+    min-height: 58px;
+    max-height: 58px;
+    margin: 0 0 14px;
+    padding: 8px 10px;
+    border: 1px solid color-mix(in srgb, goldenrod 52%, currentColor 16%);
+    border-radius: 7px;
+    background: color-mix(in srgb, goldenrod 9%, transparent);
+    overflow: hidden;
+}
+
+.mc-current-issues.clear {
+    border-color: color-mix(in srgb, currentColor 18%, transparent);
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-current-issue-summary {
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+}
+
+.mc-current-issue-summary > i {
+    font-size: 17px;
+    color: goldenrod;
+}
+
+.mc-current-issue-summary > div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.mc-current-issue-summary strong,
+.mc-current-issue-summary span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mc-current-issue-summary strong {
+    font-size: 12px;
+}
+
+.mc-current-issue-summary span {
+    font-size: 11px;
+    opacity: 0.78;
+}
+
+.mc-current-issue-summary.good > i {
+    color: #4fae61;
+}
+
+.mc-current-issue-summary.muted {
+    opacity: 0.72;
+}
+
+.mc-issue-dismiss,
+.mc-issue-show {
+    flex: 0 0 auto !important;
+    min-width: 28px !important;
+    width: auto !important;
+    height: 28px !important;
+    margin: 0 !important;
+    padding: 2px 7px !important;
+    line-height: 1 !important;
+}
+
+.mc-issue-dismiss {
+    font-size: 18px !important;
+}
+
+/* -------------------------------------------------------------------------
+   Forms
+   ------------------------------------------------------------------------- */
+
+.mc-form-grid {
+    display: grid;
+    gap: 13px;
+}
+
+.mc-form-grid.two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mc-form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.mc-form-grid .wide {
+    grid-column: 1 / -1;
+}
+
+.mc-form-grid input,
+.mc-form-grid select,
+.mc-form-grid textarea,
+.mc-group-heading select {
+    color: inherit;
+}
+
+/* -------------------------------------------------------------------------
+   Rating groups and allocation accounting
+   ------------------------------------------------------------------------- */
+
+.mc-three-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.mc-priority-lock {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid color-mix(in srgb, goldenrod 62%, currentColor 18%);
+    border-radius: 6px;
+    background: color-mix(in srgb, goldenrod 10%, transparent);
+    font-size: 12px;
+}
+
+.mc-priority-lock.compact {
+    font-size: 11px;
+}
+
+.mc-mini-note {
+    margin: 0 0 8px;
+    font-size: 11px;
+    opacity: 0.76;
+}
+
+.mc-priority-lock i {
+    color: goldenrod;
+}
+
+.mc-allocation.blocked {
+    border-color: color-mix(in srgb, goldenrod 58%, currentColor 16%);
+    background: color-mix(in srgb, goldenrod 8%, transparent);
+}
+
+.mc-abilities.ratings-locked .mc-rating-row {
+    opacity: 0.52;
+}
+
+.mc-rating-group {
+    padding: 9px 10px;
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 7px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-rating-group.has-freebies {
+    border-color: color-mix(in srgb, #3d8b4b 65%, currentColor 20%);
+}
+
+.mc-rating-group.has-overage {
+    border-color: color-mix(in srgb, #b84545 78%, currentColor 20%);
+}
+
+.mc-group-heading {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.mc-group-heading h3 {
+    margin: 0;
+}
+
+.mc-allocation {
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 7px;
+    padding: 6px 8px;
+    border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    border-radius: 5px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.mc-allocation.compact {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.mc-allocation.complete {
+    border-color: color-mix(in srgb, #3d8b4b 50%, currentColor 15%);
+}
+
+.mc-allocation.freebie {
+    border-color: color-mix(in srgb, #3d8b4b 70%, currentColor 15%);
+    background: color-mix(in srgb, #3d8b4b 9%, transparent);
+}
+
+.mc-allocation.under {
+    border-color: color-mix(in srgb, #b8860b 65%, currentColor 15%);
+    background: color-mix(in srgb, #b8860b 9%, transparent);
+}
+
+.mc-allocation.over {
+    border-color: #b84545;
+    background: color-mix(in srgb, #b84545 12%, transparent);
+}
+
+.mc-allocation-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+.mc-allocation-line strong {
+    font-size: 13px;
+}
+
+.mc-allocation-message {
+    margin-top: 3px;
+    opacity: 0.88;
+}
+
+.mc-allocation-message.good {
+    color: color-mix(in srgb, currentColor 72%, #49a65a 28%);
+}
+
+.mc-freebie-message {
+    margin-top: 4px;
+    color: color-mix(in srgb, currentColor 62%, #55bd68 38%);
+}
+
+.mc-freebie-message strong {
+    color: #4caf60;
+}
+
+.mc-overage-message {
+    margin-top: 4px;
+    color: color-mix(in srgb, currentColor 58%, #ff6b6b 42%);
+}
+
+.mc-overage-message strong {
+    color: #e45555;
+}
+
+/* -------------------------------------------------------------------------
+   Dot controls
+   ------------------------------------------------------------------------- */
+
+.mc-rating-row {
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px dotted color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.mc-rating-row:last-child {
+    border-bottom: none;
+}
+
+.mc-rating-label {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.mc-rating-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mc-item-spend {
+    flex: 0 0 auto;
+    padding: 1px 5px;
+    border: 1px solid #3d8b4b;
+    border-radius: 9px;
+    background: color-mix(in srgb, #3d8b4b 14%, transparent);
+    color: #55b867;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.mc-item-spend.overage {
+    border-color: #b84545;
+    background: color-mix(in srgb, #b84545 14%, transparent);
+    color: #e45555;
+}
+
+.mc-dot-control {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    flex: 0 0 auto;
+}
+
+.mc-dot-control.wrap {
+    flex-wrap: wrap;
+}
+
+.mc-dot,
+.mc-zero-button {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+.mc-dot {
+    width: 17px !important;
+    height: 17px !important;
+    border: 2px solid currentColor !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    opacity: 0.58;
+}
+
+.mc-dot.filled {
+    background: currentColor !important;
+    opacity: 1;
+    box-shadow: inset 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent) !important;
+}
+
+.mc-dot.freebie,
+.mc-dot.freebie.filled {
+    border-color: #3fa653 !important;
+    background: #3fa653 !important;
+    color: #3fa653 !important;
+    opacity: 1;
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.25) !important;
+}
+
+.mc-dot.freebie.overage,
+.mc-dot.freebie.overage.filled {
+    border-color: #d94a4a !important;
+    background: #d94a4a !important;
+    color: #d94a4a !important;
+}
+
+.mc-dot.locked.filled:not(.freebie) {
+    box-shadow: inset 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent), 0 0 0 1px color-mix(in srgb, currentColor 25%, transparent) !important;
+}
+
+.mc-dot:hover {
+    opacity: 1;
+    transform: scale(1.12);
+}
+
+.mc-dot:disabled,
+.mc-zero-button:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.24 !important;
+    transform: none !important;
+}
+
+.mc-dot.filled:disabled {
+    opacity: 0.38 !important;
+}
+
+.mc-dot-control.large .mc-dot {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.mc-zero-button {
+    width: 19px !important;
+    height: 19px !important;
+    border: 1px solid color-mix(in srgb, currentColor 30%, transparent) !important;
+    border-radius: 4px !important;
+    background: transparent !important;
+    color: inherit !important;
+    font-size: 10px !important;
+    line-height: 17px !important;
+    opacity: 0.48;
+}
+
+.mc-zero-button.active,
+.mc-zero-button:hover {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 10%, transparent) !important;
+}
+
+.mc-rating-value {
+    min-width: 18px;
+    margin-left: 2px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.78;
+}
+
+/* -------------------------------------------------------------------------
+   Magic / core traits
+   ------------------------------------------------------------------------- */
+
+.mc-core-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.mc-core-card {
+    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-core-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: baseline;
+    margin-bottom: 4px;
+}
+
+.mc-core-heading span {
+    font-size: 11px;
+    opacity: 0.72;
+}
+
+.mc-core-spend {
+    margin-bottom: 7px;
+    font-size: 11px;
+    opacity: 0.82;
+}
+
+.mc-core-spend strong.covered {
+    color: #55b867;
+}
+
+.mc-core-spend strong.overage {
+    color: #e45555;
+}
+
+.mc-core-note {
+    grid-column: 1 / -1;
+    padding: 8px 10px;
+    border-radius: 4px;
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.mc-magic-section {
+    margin-top: 16px;
+}
+
+.mc-magic-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.mc-magic-heading h3 {
+    margin: 0;
+}
+
+.mc-magic-heading span {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.mc-rating-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px 18px;
+    padding: 10px;
+    margin-bottom: 18px;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 6px;
+}
+
+.mc-backgrounds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mc-affinity {
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: color-mix(in srgb, goldenrod 25%, transparent);
+}
+
+/* -------------------------------------------------------------------------
+   Sidebar
+   ------------------------------------------------------------------------- */
+
+.mc-sidebar-card {
+    padding: 10px 11px;
+    margin-bottom: 10px;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-sidebar-card h3 {
+    margin: 0 0 8px;
+}
+
+.mc-budget-line,
+.mc-budget-total,
+.mc-budget-remaining,
+.mc-status-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 5px 0;
+}
+
+.mc-budget-line,
+.mc-status-line {
+    font-size: 12px;
+}
+
+.mc-budget-line strong {
+    white-space: nowrap;
+}
+
+.mc-budget-total,
+.mc-budget-remaining {
+    font-size: 15px;
+}
+
+.mc-budget-remaining strong {
+    font-size: 17px;
+}
+
+.mc-budget-remaining.bad {
+    color: #e45555;
+}
+
+.mc-legend > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 7px 0;
+    font-size: 12px;
+}
+
+.mc-legend p {
+    margin: 8px 0 0;
+    font-size: 11px;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+.mc-legend-dot {
+    width: 15px;
+    height: 15px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.mc-legend-dot.filled {
+    background: currentColor;
+}
+
+.mc-legend-dot.freebie {
+    border-color: #3fa653;
+    background: #3fa653;
+}
+
+.mc-legend-dot.overage {
+    border-color: #d94a4a;
+    background: #d94a4a;
+}
+
+/* -------------------------------------------------------------------------
+   Review / validation
+   ------------------------------------------------------------------------- */
+
+.mc-validation {
+    padding: 10px 12px;
+    border: 1px solid;
+    border-radius: 6px;
+    margin: 8px 0 14px;
+}
+
+.mc-validation.good {
+    border-color: #3d8b4b;
+    background: color-mix(in srgb, #3d8b4b 14%, transparent);
+}
+
+.mc-validation.bad {
+    border-color: #a84242;
+    background: color-mix(in srgb, #a84242 14%, transparent);
+}
+
+.mc-validation.warning {
+    border-color: color-mix(in srgb, goldenrod 60%, currentColor 15%);
+    background: color-mix(in srgb, goldenrod 10%, transparent);
+}
+
+.mc-review-issues {
+    display: grid;
+    gap: 9px;
+    margin-bottom: 18px;
+}
+
+.mc-error-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    padding: 10px 11px;
+    border: 1px solid #a84242;
+    border-radius: 6px;
+    background: color-mix(in srgb, #a84242 10%, transparent);
+}
+
+.mc-error-card.advisory {
+    border-color: color-mix(in srgb, goldenrod 60%, currentColor 15%);
+    background: color-mix(in srgb, goldenrod 9%, transparent);
+}
+
+.mc-error-card.advisory .mc-error-tab {
+    color: goldenrod;
+}
+
+.mc-error-tab {
+    grid-column: 1 / 2;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #d9534f;
+}
+
+.mc-error-message {
+    grid-column: 1 / 2;
+    font-weight: 700;
+}
+
+.mc-error-fix {
+    grid-column: 1 / 2;
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+.mc-error-card button {
+    grid-column: 2 / 3;
+    grid-row: 1 / 4;
+    align-self: center;
+    min-width: 135px;
+}
+
+.mc-review-notes {
+    display: grid;
+    gap: 7px;
+    margin-bottom: 16px;
+}
+
+.mc-warning-card {
+    padding: 8px 10px;
+    border: 1px solid color-mix(in srgb, goldenrod 45%, currentColor 15%);
+    border-radius: 5px;
+    background: color-mix(in srgb, goldenrod 8%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mc-warning-card span {
+    font-size: 12px;
+    opacity: 0.84;
+}
+
+.mc-specialties-review {
+    margin: 16px 0 20px;
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, #6b87c9 55%, currentColor 18%);
+    border-radius: 7px;
+    background: color-mix(in srgb, #6b87c9 8%, transparent);
+}
+
+.mc-specialties-review h3 {
+    margin: 0 0 5px;
+}
+
+.mc-specialties-review > p {
+    margin: 0 0 11px;
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0.84;
+}
+
+.mc-specialty-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px 12px;
+}
+
+.mc-specialty-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mc-specialty-row > span {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.mc-specialty-row small {
+    opacity: 0.68;
+}
+
+.mc-specialty-row input {
+    color: inherit;
+}
+
+.mc-review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.mc-review-grid dl {
+    display: grid;
+    grid-template-columns: minmax(100px, auto) 1fr;
+    gap: 4px 10px;
+}
+
+.mc-review-grid dt {
+    font-weight: 600;
+}
+
+.mc-review-grid dd {
+    margin: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------------- */
+
+.mc-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.mc-footer button {
+    min-width: 110px;
+}
+
+.mc-footer-spacer {
+    flex: 1;
+}
+
+.mc-autosave {
+    font-size: 11px;
+    opacity: 0.66;
+    white-space: nowrap;
+}
+
+.mc-reset {
+    min-width: 94px !important;
+    opacity: 0.7;
+}
+
+.mc-reset:hover {
+    opacity: 1;
+}
+
+.mc-create:not(:disabled) {
+    font-weight: 700;
+    border-color: #3d8b4b;
+}
+
+/* -------------------------------------------------------------------------
+   Responsive fallbacks
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+    .mc-quick-rules {
+        grid-template-columns: repeat(3, minmax(135px, 1fr));
+    }
+
+    .mc-layout {
+        grid-template-columns: minmax(0, 1fr) 260px;
+    }
+}
+
+@media (max-width: 900px) {
+    .mc-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        border-left: none;
+        border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    }
+
+    .mc-sidebar-card {
+        margin-bottom: 0;
+    }
+
+    .mc-three-columns,
+    .mc-form-grid.two-col,
+    .mc-review-grid,
+    .mc-specialty-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .mc-quick-rules,
+    .mc-sidebar,
+    .mc-core-grid,
+    .mc-rating-grid,
+    .mc-backgrounds {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-step span:nth-child(2) {
+        display: none;
+    }
+
+    .mc-autosave {
+        display: none;
+    }
+
+    .mc-error-card {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-error-card button {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+/* ==========================================================================
+   v0.1.8 - two-phase creation workflow
+   ========================================================================== */
+
+.mc-step:disabled {
+    opacity: 0.34;
+    cursor: not-allowed;
+    filter: saturate(0.55);
+}
+
+.mc-step:disabled.complete {
+    opacity: 0.64;
+}
+
+.mc-draft-reset-note {
+    border-bottom-color: color-mix(in srgb, goldenrod 45%, transparent);
+    background: color-mix(in srgb, goldenrod 10%, transparent);
+}
+
+.mc-quick-rules.base-phase {
+    grid-template-columns: repeat(6, minmax(120px, 1fr));
+}
+
+.mc-quick-rules.freebie-phase {
+    grid-template-columns: repeat(7, minmax(100px, 1fr));
+}
+
+.mc-current-issues.bad {
+    border-color: color-mix(in srgb, #b84545 72%, currentColor 12%);
+    background: color-mix(in srgb, #b84545 11%, transparent);
+}
+
+.mc-current-issues.bad .mc-current-issue-summary > i {
+    color: #e45555;
+}
+
+.mc-attributes.ratings-locked .mc-rating-row,
+.mc-abilities.ratings-locked .mc-rating-row {
+    opacity: 0.52;
+}
+
+.mc-dot.future,
+.mc-dot.future:disabled {
+    border-style: dashed !important;
+    opacity: 0.18 !important;
+    background: transparent !important;
+}
+
+.mc-dot.base-dot,
+.mc-dot.base-dot.filled,
+.mc-dot.base-dot:disabled,
+.mc-dot.base-dot.filled:disabled {
+    opacity: 1 !important;
+}
+
+.mc-dot.unavailable,
+.mc-dot.unavailable:disabled {
+    border-color: #d94a4a !important;
+    color: #d94a4a !important;
+    background: transparent !important;
+    opacity: 0.82 !important;
+    box-shadow: none !important;
+}
+
+.mc-legend-dot.unavailable {
+    border-color: #d94a4a;
+    background: transparent;
+}
+
+.mc-help {
+    margin: 7px 0 0;
+    font-size: 11px;
+    line-height: 1.4;
+    opacity: 0.76;
+}
+
+.mc-split-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.mc-list-grid {
+    display: grid;
+    gap: 1px;
+}
+
+.mc-affinity-badge {
+    flex: 0 0 auto;
+    padding: 1px 5px;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, goldenrod 60%, currentColor 20%);
+    background: color-mix(in srgb, goldenrod 12%, transparent);
+    color: color-mix(in srgb, currentColor 75%, goldenrod 25%);
+    font-size: 9px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.mc-rating-row.affinity {
+    background: color-mix(in srgb, goldenrod 5%, transparent);
+}
+
+
+.mc-sphere-plan {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.mc-sphere-plan > i {
+    margin-top: 2px;
+}
+
+.mc-sphere-plan.warning {
+    border-color: color-mix(in srgb, goldenrod 58%, currentColor 14%);
+    background: color-mix(in srgb, goldenrod 10%, transparent);
+}
+
+.mc-sphere-plan.warning > i {
+    color: goldenrod;
+}
+
+.mc-sphere-plan.good {
+    border-color: color-mix(in srgb, #3d8b4b 58%, currentColor 14%);
+    background: color-mix(in srgb, #3d8b4b 10%, transparent);
+}
+
+.mc-sphere-plan.good > i {
+    color: #4fae61;
+}
+
+
+.mc-phase-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.mc-phase-action.secondary-action {
+    justify-content: flex-start;
+}
+
+.mc-primary-action {
+    min-width: 280px;
+    min-height: 38px;
+    font-weight: 800;
+    border-color: #3d8b4b !important;
+}
+
+.mc-freebie-budget-hero {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 18px;
+}
+
+.mc-freebie-budget-hero > div {
+    padding: 11px 13px;
+    border: 1px solid color-mix(in srgb, #3d8b4b 55%, currentColor 18%);
+    border-radius: 7px;
+    background: color-mix(in srgb, #3d8b4b 8%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mc-freebie-budget-hero span,
+.mc-freebie-budget-hero small {
+    font-size: 11px;
+    opacity: 0.74;
+}
+
+.mc-freebie-budget-hero strong {
+    font-size: 22px;
+    line-height: 1.15;
+}
+
+.mc-section-title {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 20px 0 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.mc-section-title small {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.mc-item-spend.inline-spend {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.base-core .mc-dot:disabled.filled {
+    opacity: 1 !important;
+}
+
+@media (max-width: 1100px) {
+    .mc-quick-rules.base-phase,
+    .mc-quick-rules.freebie-phase {
+        grid-template-columns: repeat(3, minmax(135px, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .mc-split-section,
+    .mc-freebie-budget-hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================================
+   Mage Character Tools launcher
+   ========================================================================= */
+
+.wod20-mage-tools-launcher .window-content {
+    padding: 0;
+    overflow-y: auto;
+}
+
+.mc-launcher-shell {
+    min-height: 100%;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mc-launcher-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.mc-launcher-header > i {
+    font-size: 34px;
+    opacity: 0.85;
+}
+
+.mc-launcher-header h2,
+.mc-launcher-header p {
+    margin: 0;
+}
+
+.mc-launcher-header p {
+    margin-top: 4px;
+    opacity: 0.78;
+}
+
+.mc-launcher-actions {
+    display: grid;
+    gap: 12px;
+}
+
+.mc-launcher-choice {
+    min-height: 82px;
+    padding: 12px 14px !important;
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    text-align: left !important;
+}
+
+.mc-launcher-choice > i {
+    font-size: 24px;
+    text-align: center;
+}
+
+.mc-launcher-choice > span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mc-launcher-choice strong {
+    font-size: 15px;
+}
+
+.mc-launcher-choice small {
+    line-height: 1.35;
+    opacity: 0.78;
+}
+
+/* =========================================================================
+   XP advancement
+   ========================================================================= */
+
+.mc-advancement-select {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+}
+
+.mc-select-card {
+    width: min(620px, 100%);
+    padding: 24px;
+    border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mc-select-card h2,
+.mc-select-card p {
+    margin: 0;
+}
+
+.mc-select-icon {
+    align-self: center;
+    font-size: 38px;
+    opacity: 0.8;
+}
+
+.mc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.mc-field > span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.mc-xp-quick-rules {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(105px, 1fr));
+    gap: 6px;
+    padding: 8px 10px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.mc-xp-quick-rules > div {
+    min-width: 0;
+    padding: 7px 8px;
+    border: 1px solid color-mix(in srgb, currentColor 17%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mc-xp-quick-rules strong {
+    font-size: 11px;
+}
+
+.mc-xp-quick-rules span {
+    font-size: 10px;
+    line-height: 1.25;
+    opacity: 0.8;
+}
+
+.mc-xp-quick-rules .mc-xp-budget-top {
+    border-color: color-mix(in srgb, #3d8b4b 58%, currentColor 18%);
+    background: color-mix(in srgb, #3d8b4b 10%, transparent);
+}
+
+.mc-xp-quick-rules .mc-xp-budget-top strong {
+    font-size: 13px;
+}
+
+.mc-affinity-selector {
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 360px);
+    gap: 12px;
+    align-items: center;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 7px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-affinity-selector > span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mc-affinity-selector small {
+    opacity: 0.72;
+}
+
+.mc-affinity-badge {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 5px;
+    border: 1px solid color-mix(in srgb, #3d8b4b 60%, transparent);
+    border-radius: 9px;
+    background: color-mix(in srgb, #3d8b4b 13%, transparent);
+    color: color-mix(in srgb, #68d37d 82%, currentColor 18%);
+    font-size: 9px;
+    font-weight: 800;
+    vertical-align: middle;
+}
+
+.mc-sphere-row .mc-rating-label small {
+    display: block;
+    margin-top: 2px;
+    font-size: 9px;
+    opacity: 0.64;
+}
+
+.mc-validation.compact {
+    margin: 8px 0;
+    padding: 7px 9px;
+    font-size: 11px;
+}
+
+.mc-background-xp-note {
+    margin-top: 18px !important;
+}
+
+.mc-xp-review-table {
+    margin-top: 14px;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.mc-xp-review-head,
+.mc-xp-review-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px 100px;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+}
+
+.mc-xp-review-head {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.mc-xp-review-row + .mc-xp-review-row {
+    border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.mc-xp-review-row span:last-child,
+.mc-xp-review-head span:last-child {
+    text-align: right;
+}
+
+.mc-empty-plan {
+    padding: 14px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.mc-xp-review-total {
+    margin-top: 14px;
+    margin-left: auto;
+    width: min(420px, 100%);
+    display: grid;
+    gap: 5px;
+}
+
+.mc-xp-review-total > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 9px;
+    border-radius: 5px;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.mc-xp-review-total > div:last-child {
+    border: 1px solid color-mix(in srgb, #3d8b4b 45%, transparent);
+    background: color-mix(in srgb, #3d8b4b 10%, transparent);
+}
+
+.mc-change-mage {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.mc-xp-footer-budget {
+    align-self: center;
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.wod20-mage-advancement .mc-dot.xp-dot,
+.wod20-mage-advancement .mc-legend-dot.freebie {
+    background: #3d8b4b !important;
+    border-color: #65c876 !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, #65c876 34%, transparent);
+}
+
+@media (max-width: 1100px) {
+    .mc-xp-quick-rules {
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+    }
+}
+
+
+.mc-advancement-record {
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 7px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    display: grid;
+    gap: 12px;
+}
+
+.mc-advancement-record-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+}
+
+.mc-advancement-record-heading h3,
+.mc-advancement-record-heading p {
+    margin: 0;
+}
+
+.mc-advancement-record-heading p {
+    margin-top: 3px;
+    font-size: 11px;
+    opacity: 0.72;
+}
+
+.mc-ledger-date-preview {
+    min-width: 132px;
+    padding: 7px 9px;
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 6%, transparent);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1px 10px;
+}
+
+.mc-ledger-date-preview small {
+    grid-column: 1 / -1;
+    opacity: 0.68;
+}
+
+.mc-ledger-date-preview span {
+    opacity: 0.7;
+}
+
+.mc-story-note-field {
+    display: grid;
+    gap: 5px;
+}
+
+.mc-story-note-field > span {
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+}
+
+.mc-story-note-field small {
+    opacity: 0.68;
+}
+
+.mc-story-note-input {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.mc-story-note-input input {
+    min-width: 0;
+}
+
+.mc-story-note-input > span {
+    min-width: 46px;
+    text-align: right;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+.mc-ledger-preview {
+    border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+    padding-top: 9px;
+    display: grid;
+    gap: 3px;
+}
+
+.mc-ledger-preview > small {
+    margin-bottom: 2px;
+    opacity: 0.68;
+}
+
+.mc-ledger-preview > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 10px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-ledger-preview > div strong {
+    text-align: right;
+}
+
+.mc-story-preview-row.hidden {
+    display: none;
+}
+
+/* =========================================================================
+   Add earned Mage XP
+   ========================================================================= */
+
+.wod20-mage-experience-award .window-content {
+    padding: 0;
+}
+
+.mc-xp-award-shell {
+    height: 100%;
+}
+
+.mc-xp-award-main {
+    height: 100%;
+    overflow: auto;
+    padding: 22px;
+}
+
+.mc-xp-award-card {
+    width: min(650px, 100%);
+    margin: 0 auto;
+    padding: 18px;
+    border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+    display: grid;
+    gap: 16px;
+}
+
+.mc-xp-award-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: start;
+    padding-bottom: 12px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.mc-xp-award-header h2,
+.mc-xp-award-header p {
+    margin: 0;
+}
+
+.mc-xp-award-header p {
+    margin-top: 4px;
+    font-size: 11px;
+    opacity: 0.74;
+}
+
+.mc-xp-award-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mc-xp-award-summary > div {
+    padding: 9px 10px;
+    border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mc-xp-award-summary span {
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+.mc-xp-award-summary strong {
+    font-size: 16px;
+}
+
+.mc-xp-award-form {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 14px;
+    align-items: end;
+}
+
+.mc-xp-award-form .mc-field small {
+    font-size: 10px;
+    opacity: 0.68;
+}
+
+.mc-xp-award-preview {
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 7px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.mc-xp-award-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 620px) {
+    .mc-xp-award-header,
+    .mc-xp-award-form {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-xp-award-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Play-focused Mage tools; no actor template overrides. */
+.wod20-mage-charamancer .mc-details-body{padding:14px;overflow:auto}.wod20-mage-charamancer .mc-details-card{padding:12px;border:1px solid #65556b;border-radius:8px;margin:10px 0;background:rgba(30,24,34,.9)}.wod20-mage-charamancer .mc-details-card h3{margin:0 0 9px}.wod20-mage-charamancer .mc-details-traits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.wod20-mage-charamancer .mc-details-card details{padding:7px;border-bottom:1px solid #534558}.wod20-mage-charamancer .mc-details-card summary{cursor:pointer}.wod20-mage-charamancer .mc-description{white-space:pre-wrap;line-height:1.5;font-size:12px}.wod20-mage-charamancer .mc-noncore{color:#83ceff}.wod20-mage-charamancer .mc-info{position:relative;display:inline-flex;align-items:center;justify-content:center;border:1px solid #b5adbd;border-radius:50%;width:16px;height:16px;min-width:16px;font-size:11px;margin:0 5px;cursor:help;color:#ece5f0;vertical-align:middle}.wod20-mage-charamancer .mc-tip{display:none;position:absolute;left:0;top:22px;z-index:100;width:300px;max-height:350px;overflow:auto;padding:11px;background:#17121c;color:#f1ebf5;white-space:pre-wrap;font-weight:normal;border:1px solid #8c779a;border-radius:6px;box-shadow:0 4px 15px #0008;font-size:12px;line-height:1.5}.wod20-mage-charamancer .mc-info:hover .mc-tip,.wod20-mage-charamancer .mc-info:focus .mc-tip,.wod20-mage-charamancer .mc-info:focus-within .mc-tip{display:block}.wod20-mage-charamancer .mc-selected-mf{padding:11px;border:1px solid #806c8c;border-left:4px solid #91c7df;border-radius:7px;margin:8px 0;background:#302737}.wod20-mage-charamancer .mc-selected-mf>span{font-size:12px}.wod20-mage-charamancer .mc-selected-mf p{font-size:12px}.wod20-mage-charamancer .mc-xp-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.wod20-mage-charamancer .mc-xp-summary>div{text-align:center;padding:9px;background:#17111f;border-radius:6px}.wod20-mage-charamancer .mc-xp-summary strong,.wod20-mage-charamancer .mc-xp-summary span{display:block}.wod20-mage-charamancer .mc-xp-summary strong{font-size:22px}.mc-sheet-details-button{width:auto;margin:0 8px;font-size:12px}.wod20-mage-charamancer .mc-noncore-note{font-size:11px;color:#b0dfff;padding:5px 12px}.wod20-mage-charamancer .mc-rating-label>small{display:block;font-size:10px;color:#bcb0c5}
+
+/* Creation choices match the web charamancer while using native Foundry fields. */
+.mc-editable-dropdown {display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.7fr);gap:6px;}
+.mc-rank-label,.mc-dm-note {display:block;flex-basis:100%;font-size:11px;line-height:1.3;opacity:.8;}
+.mc-dm-note {color:#aa6500;}
+.mc-rating-label {flex-wrap:wrap;gap:4px;}
+.mc-trait-picker,.mc-custom-background,.mc-dot-guide {padding:10px;margin:8px 0;border:1px solid var(--color-border-light-primary);border-radius:6px;}
+.mc-trait-picker[open] {max-height:340px;overflow-y:auto;}
+.mc-trait-picker button {display:flex;justify-content:space-between;align-items:center;text-align:left;white-space:normal;margin:4px 0;min-height:35px;}
+.mc-trait-picker .mc-tip {position:fixed;left:30%;top:20%;max-width:520px;max-height:65vh;overflow:auto;z-index:1000;}
+.mc-dot-guide label {display:inline-block;width:48%;padding:6px;}
+.mc-merits .mc-selected-mf {border-left:4px solid #348b6b;padding:10px;margin:8px 0;background:rgba(50,140,100,.09);}
+.mc-custom-background label {display:block;}
+
+.mc-free-arete-option>span:nth-child(2){display:flex;gap:8px;align-items:center;font-size:13px}
+.mc-free-arete-option input{width:auto;flex:none}
+.mc-free-arete-option small{display:block;color:var(--color-text-secondary,#aaa);margin-top:3px}
+
+/* 0.5.10: Merits and Flaws belong to Freebie spending, not Concept. */
+.mc-freebies-panel > .mc-merits,
+.mc-panel > .mc-merits {
+    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    padding-top: 12px;
+    margin-top: 14px;
+}
+.mc-freebies-panel > .mc-merits > details[data-panel-key="merit-add"] {
+    border: 1px solid color-mix(in srgb, currentColor 27%, transparent);
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 12px;
+}
+
+
+/* 0.5.13: Concept is a focused, low-clutter editor rather than a rules dashboard. */
+.wod20-mage-charamancer .mc-concept-ribbon {
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:9px 17px; border-bottom:1px solid color-mix(in srgb,currentColor 18%,transparent);
+    background:color-mix(in srgb,currentColor 3%,transparent); font-size:12px;
+}
+.wod20-mage-charamancer .mc-concept-ribbon > strong {font-size:13px; white-space:nowrap}
+.wod20-mage-charamancer .mc-concept-ribbon > span {opacity:.8; flex:1; min-width:180px}
+.wod20-mage-charamancer .mc-concept-rules {position:relative; margin:0; padding:0}
+.wod20-mage-charamancer .mc-concept-rules summary {cursor:pointer; font-size:12px; opacity:.85}
+.wod20-mage-charamancer .mc-concept-rule-list {
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px 18px;
+    padding:12px 3px 4px; min-width:min(650px,72vw); font-size:12px;
+}
+.wod20-mage-charamancer .mc-concept-rule-list > span {display:flex; gap:8px; justify-content:space-between}
+.wod20-mage-charamancer .mc-concept-rules[open] {flex-basis:100%}
+.wod20-mage-charamancer .mc-concept-rules[open] > summary {text-align:right}
+.wod20-mage-charamancer .mc-current-issues.mc-concept-issue {
+    height:auto; min-height:37px; max-height:none; padding:6px 10px; margin-bottom:9px;
+}
+.wod20-mage-charamancer .mc-concept-issue .mc-current-issue-summary {min-height:25px; gap:8px}
+.wod20-mage-charamancer .mc-concept-issue .mc-current-issue-summary > i {font-size:14px}
+.wod20-mage-charamancer .mc-concept-issue .mc-current-issue-summary > div {
+    flex-direction:row; flex-wrap:wrap; align-items:baseline; gap:5px 10px;
+}
+.wod20-mage-charamancer .mc-concept-issue .mc-current-issue-summary strong,
+.wod20-mage-charamancer .mc-concept-issue .mc-current-issue-summary span {white-space:normal}
+.wod20-mage-charamancer .mc-concept-panel .mc-concept-heading {
+    display:flex; align-items:baseline; flex-wrap:wrap; gap:9px 16px; margin:0 0 12px;
+}
+.wod20-mage-charamancer .mc-concept-panel .mc-concept-heading h2 {
+    border:0; margin:0; padding:0; font-size:24px; line-height:1.2;
+}
+.wod20-mage-charamancer .mc-concept-panel .mc-concept-heading p {
+    margin:0; opacity:.75; font-size:12px; line-height:1.35;
+}
+.wod20-mage-charamancer .mc-concept-fields {gap:9px 20px}
+.wod20-mage-charamancer .mc-concept-fields > .mc-concept-section-title {
+    display:block; margin:6px 0 0; padding:5px 0 4px;
+    border-bottom:1px solid color-mix(in srgb,currentColor 18%,transparent);
+    font-size:11px; font-weight:750; letter-spacing:.07em; text-transform:uppercase; opacity:.76;
+}
+.wod20-mage-charamancer .mc-concept-fields > .mc-concept-section-title:first-child {margin-top:0}
+.wod20-mage-charamancer .mc-concept-fields label {gap:4px; min-width:0}
+.wod20-mage-charamancer .mc-concept-fields label > span {
+    font-size:12px; font-weight:600; opacity:.87;
+}
+.wod20-mage-charamancer .mc-concept-fields input[type=text],
+.wod20-mage-charamancer .mc-concept-fields select {
+    width:100%; min-height:34px; max-width:100%; box-sizing:border-box;
+    padding:6px 10px; border:1px solid color-mix(in srgb,currentColor 14%,transparent);
+    border-bottom-color:color-mix(in srgb,currentColor 36%,transparent); border-radius:4px;
+    background:color-mix(in srgb,currentColor 5%,transparent);
+}
+.wod20-mage-charamancer .mc-concept-fields :is(input,select):focus-visible,
+.wod20-mage-charamancer .mc-concept-story textarea:focus-visible {
+    outline:2px solid var(--color-focus, #73aacc); outline-offset:1px;
+}
+.wod20-mage-charamancer .mc-concept-hint {
+    font-size:11px; margin:9px 0 13px; opacity:.7;
+}
+.wod20-mage-charamancer .mc-concept-disclosure {
+    border-top:1px solid color-mix(in srgb,currentColor 18%,transparent);
+    margin:0; padding:0;
+}
+.wod20-mage-charamancer .mc-concept-disclosure > summary {
+    cursor:pointer; padding:12px 3px; font-size:13px; font-weight:600;
+}
+.wod20-mage-charamancer .mc-concept-disclosure[open] > summary {padding-bottom:9px}
+.wod20-mage-charamancer .mc-concept-active {
+    margin-left:10px; color:#8bd3ab; font-size:11px; font-weight:600;
+}
+.wod20-mage-charamancer .mc-concept-muted {
+    margin-left:7px; font-size:11px; opacity:.6; font-weight:400;
+}
+.wod20-mage-charamancer .mc-concept-arete {
+    display:flex; gap:9px; align-items:center; cursor:pointer; font-size:13px;
+}
+.wod20-mage-charamancer .mc-concept-arete input {width:17px; height:17px; flex:none}
+.wod20-mage-charamancer .mc-concept-disclosure > small {
+    display:block; opacity:.7; margin:5px 0 12px 26px;
+}
+.wod20-mage-charamancer .mc-concept-story {padding:4px 3px 14px; gap:10px}
+.wod20-mage-charamancer .mc-concept-story label > span {font-size:12px}
+.wod20-mage-charamancer .mc-concept-story textarea {width:100%; box-sizing:border-box; padding:7px 9px}
+@media (max-width:700px) {
+    .wod20-mage-charamancer .mc-concept-rule-list {grid-template-columns:1fr 1fr;min-width:0;width:100%}
+    .wod20-mage-charamancer .mc-concept-ribbon > span {min-width:0}
+}
+
+
+/* v0.5.14: Theme-aware identity comboboxes (no browser-native dropdown chrome). */
+.wod20-mage-charamancer .mc-concept-field {
+    min-width:0; display:flex; flex-direction:column; gap:4px;
+}
+.wod20-mage-charamancer .mc-concept-field > label {
+    font-size:12px; font-weight:600; opacity:.9;
+}
+.wod20-mage-charamancer .mc-concept-combo {
+    display:flex; align-items:stretch; width:100%; min-width:0; min-height:34px;
+    border:1px solid color-mix(in srgb, currentColor 26%,transparent);
+    border-radius:5px;
+    background:color-mix(in srgb,currentColor 5%,transparent);
+    color:inherit;
+}
+.wod20-mage-charamancer .mc-concept-combo:focus-within {
+    outline:2px solid var(--color-focus,#79aee0); outline-offset:1px;
+}
+.wod20-mage-charamancer .mc-concept-combo input[data-concept-input] {
+    flex:1; min-width:0; width:100%; min-height:32px; padding:6px 10px;
+    border:0; border-radius:5px 0 0 5px; outline:0; box-shadow:none;
+    background:transparent; color:inherit;
+}
+.wod20-mage-charamancer .mc-concept-combo input[data-concept-input]:focus {
+    outline:none; box-shadow:none;
+}
+.wod20-mage-charamancer .mc-concept-toggle {
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 34px; min-width:34px; min-height:32px; padding:0;
+    border:0; border-left:1px solid color-mix(in srgb,currentColor 14%,transparent);
+    border-radius:0 4px 4px 0; background:transparent; color:inherit;
+    cursor:pointer;
+}
+.wod20-mage-charamancer .mc-concept-toggle:hover,
+.wod20-mage-charamancer .mc-concept-toggle[aria-expanded=true] {
+    background:color-mix(in srgb,currentColor 12%,transparent);
+}
+/* The popover is mounted directly on <body> so it can extend outside .mc-main
+   despite Foundry's scroll container, and gets the current window's theme. */
+.mc-concept-popup {
+    position:fixed; box-sizing:border-box; overflow-y:auto; overscroll-behavior:contain;
+    border:1px solid var(--mc-popup-border,#666575); border-radius:7px;
+    background:var(--mc-popup-bg,#25242d); color:var(--mc-popup-fg,#f3f1f5);
+    box-shadow:0 9px 30px rgba(0,0,0,.32); padding:5px;
+    font:inherit; font-size:13px; line-height:1.25;
+}
+.mc-concept-popup .mc-concept-option,
+.mc-concept-popup .mc-concept-show-all {
+    display:block; box-sizing:border-box; width:100%; min-height:31px; padding:7px 10px;
+    border:0; border-radius:4px; background:transparent; color:inherit;
+    text-align:left; cursor:pointer; font:inherit; font-size:13px;
+}
+.mc-concept-popup .mc-concept-option:hover,
+.mc-concept-popup .mc-concept-option.is-active,
+.mc-concept-popup .mc-concept-show-all:hover {
+    background:var(--mc-popup-hover,#39455e);
+}
+.mc-concept-popup .mc-concept-option.is-selected {
+    background:var(--mc-popup-selected,#364c69); font-weight:650;
+}
+.mc-concept-popup .mc-concept-option.is-selected::after {
+    content:"✓"; float:right; margin-left:8px;
+}
+.mc-concept-popup .mc-concept-show-all {
+    margin-top:4px; border-top:1px solid var(--mc-popup-border,#666575);
+    opacity:.9; font-size:12px;
+}
+.mc-concept-popup .mc-concept-option-empty {
+    padding:10px; opacity:.8; font-size:12px;
+}
+
+/* Advisory M20 Affinity Spheres: ordering and a quiet label, never a restriction. */
+.mc-concept-popup .mc-concept-option-heading {
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.045em;
+    padding:8px 10px 5px; margin:4px 3px 2px;
+    border-top:1px solid var(--mc-popup-border,#666575);
+    color:var(--mc-popup-fg,#f3f1f5); opacity:.75;
+}
+.mc-concept-popup .mc-concept-option-heading:first-child { border-top:0; margin-top:0; }
+.mc-concept-popup .mc-concept-option.is-recommended {
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.mc-concept-popup .mc-concept-recommendation-badge {
+    white-space:nowrap; font-size:10px; font-weight:650; letter-spacing:.025em;
+    padding:2px 7px; border:1px solid var(--mc-popup-border,#666575);
+    border-radius:12px; background:var(--mc-popup-hover,#39455e); opacity:.95;
+}
+.mc-concept-popup .mc-concept-option.is-selected.is-recommended::after { display:none; }
+
+
+.mc-compact-core {
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.mc-compact-core .mc-rating-group {
+    padding-bottom: 7px;
+}
+
+.mc-compact-core .mc-group-heading strong {
+    font-size: 12px;
+    opacity: 0.82;
+}
+
+.mc-streamlined-tab .mc-noncore-note {
+    margin: 0 0 8px;
+}
+
+
+/* v0.5.17: Make curated GM-approved Abilities discoverable in both creation phases. */
+.wod20-mage-charamancer .mc-extra-picker {
+    margin: 6px 0 9px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, #4a99c5 52%, currentColor 16%);
+    border-radius: 6px;
+    background: color-mix(in srgb, #4a99c5 6%, transparent);
+}
+.wod20-mage-charamancer .mc-extra-picker[open] {
+    max-height: none;
+    overflow: visible;
+}
+.wod20-mage-charamancer .mc-extra-picker > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    list-style: none;
+    padding: 7px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    color: inherit;
+}
+.wod20-mage-charamancer .mc-extra-picker > summary::-webkit-details-marker { display: none; }
+.wod20-mage-charamancer .mc-extra-picker > summary > span { min-width: 0; }
+.wod20-mage-charamancer .mc-extra-picker > summary i { color: #75b8d9; margin-right: 4px; }
+.wod20-mage-charamancer .mc-extra-picker > summary small { font-size: 10px; flex: none; opacity: .7; }
+.wod20-mage-charamancer .mc-extra-picker-note {
+    font-size: 10px;
+    line-height: 1.35;
+    opacity: .75;
+    padding: 0 8px 5px;
+}
+.wod20-mage-charamancer .mc-extra-options {
+    max-height: 135px;
+    overflow-y: auto;
+    padding: 1px 6px 5px;
+    scrollbar-width: thin;
+}
+.wod20-mage-charamancer .mc-extra-option {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-width: 0;
+}
+.wod20-mage-charamancer .mc-extra-option button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    min-height: 27px;
+    height: auto;
+    margin: 2px 0;
+    padding: 3px 6px;
+    color: inherit;
+    font-size: 11px;
+    text-align: left;
+    white-space: normal;
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+    border-radius: 4px;
+}
+.wod20-mage-charamancer .mc-extra-option button:hover,
+.wod20-mage-charamancer .mc-extra-option button:focus-visible {
+    border-color: color-mix(in srgb, #62b8e6 65%, currentColor 20%);
+    background: color-mix(in srgb, #62b8e6 14%, transparent);
+}
+.wod20-mage-charamancer .mc-extra-option .mc-info { flex: none; margin: 0 2px; }
+.wod20-mage-charamancer .mc-extra-empty { margin: 3px; font-size: 11px; opacity: .75; }
+.wod20-mage-charamancer .mc-extra-selected-label {
+    margin-top: 9px;
+    padding: 5px 2px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: color-mix(in srgb, #78c4eb 75%, currentColor 25%);
+    border-bottom: 1px solid color-mix(in srgb, #78c4eb 35%, transparent);
+}
+.wod20-mage-charamancer .mc-extra-selected-label small {
+    display: block;
+    margin-top: 1px;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--color-text-secondary, currentColor);
+}
+
+
+/* v0.5.19: Streamlined Magic & Backgrounds creation layout. */
+.wod20-mage-charamancer .mc-magic-fixed-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px 15px;
+    padding: 7px 10px;
+    margin: 0 0 5px;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+    font-size: 12px;
+}
+.wod20-mage-charamancer .mc-magic-fixed-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    white-space: nowrap;
+}
+.wod20-mage-charamancer .mc-magic-fixed-item strong {font-size: 14px;}
+.wod20-mage-charamancer .mc-magic-fixed-help {font-size: 11px; opacity: .75; margin-left: auto;}
+.wod20-mage-charamancer .mc-magic-rules {margin: 0 0 9px; font-size: 11px;}
+.wod20-mage-charamancer .mc-magic-rules summary {cursor: pointer; width: fit-content; opacity: .78;}
+.wod20-mage-charamancer .mc-magic-rules p {padding: 4px 8px; margin: 3px 0 5px; line-height: 1.4; opacity: .85;}
+.wod20-mage-charamancer .mc-streamlined-tab .mc-split-section {margin-top: 4px;}
+.wod20-mage-charamancer .mc-background-add {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 12px 0 0;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    overflow: visible;
+}
+.wod20-mage-charamancer .mc-background-add > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 12px;
+    font-weight: 650;
+}
+.wod20-mage-charamancer .mc-background-add > summary::-webkit-details-marker {display: none;}
+.wod20-mage-charamancer .mc-background-add > summary i {font-size: 11px; margin-right: 5px;}
+.wod20-mage-charamancer .mc-background-add > summary small {font-size: 10px; font-weight: 400; opacity: .76; white-space: nowrap;}
+.wod20-mage-charamancer .mc-custom-background-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    padding: 10px;
+    border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+    min-width: 0;
+    box-sizing: border-box;
+}
+.wod20-mage-charamancer .mc-custom-background-body label {
+    display: block;
+    margin: 2px 0 0;
+    font-size: 11px;
+    font-weight: 650;
+}
+.wod20-mage-charamancer .mc-custom-background-body :is(input, textarea) {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 6px 8px;
+    color: inherit;
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 12px;
+}
+.wod20-mage-charamancer .mc-custom-background-body input {height: 30px;}
+.wod20-mage-charamancer .mc-custom-background-body textarea {min-height: 74px; height: 74px; resize: vertical; line-height: 1.4;}
+.wod20-mage-charamancer .mc-custom-background-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+.wod20-mage-charamancer .mc-custom-background-actions small {font-size: 10px; opacity: .75;}
+.wod20-mage-charamancer .mc-custom-background-actions button {
+    width: auto;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+/* v0.5.21: Specialty suggestions use a theme-aware listbox instead of the
+ * unstyled native datalist popup. The shared popup CSS also handles clipping. */
+.wod20-mage-charamancer .mc-specialty-row {
+    min-width: 0;
+}
+.wod20-mage-charamancer .mc-specialty-row > label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 8px; min-width: 0; font-weight: 600;
+}
+.wod20-mage-charamancer .mc-specialty-combo {
+    display: flex; align-items: stretch;
+    width: 100%; min-width: 0; min-height: 34px; box-sizing: border-box;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    border-radius: 5px; color: inherit;
+}
+.wod20-mage-charamancer .mc-specialty-combo:focus-within {
+    outline: 2px solid var(--color-focus, #79aee0);
+    outline-offset: 1px;
+}
+.wod20-mage-charamancer .mc-specialty-combo input[data-specialty-input] {
+    flex: 1; min-width: 0; width: 100%; min-height: 32px; box-sizing: border-box;
+    margin: 0; padding: 6px 10px; border: 0; box-shadow: none;
+    border-radius: 4px 0 0 4px; background: transparent; color: inherit;
+}
+.wod20-mage-charamancer .mc-specialty-combo input[data-specialty-input]:focus {
+    outline: none; box-shadow: none;
+}
+.wod20-mage-charamancer .mc-specialty-toggle {
+    display: flex; justify-content: center; align-items: center;
+    flex: 0 0 36px; width: 36px; min-width: 36px; min-height: 32px;
+    margin: 0; padding: 0; border: 0; border-left: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 0 4px 4px 0; color: inherit; background: transparent;
+    cursor: pointer;
+}
+.wod20-mage-charamancer .mc-specialty-toggle:hover,
+.wod20-mage-charamancer .mc-specialty-toggle[aria-expanded=true] {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+}
+/* The menu uses the Concept popup's existing dark/light styles. */
+.mc-concept-popup.mc-specialty-popup { max-width: calc(100vw - 16px); }
+.mc-specialty-popup .mc-concept-option-empty { padding: 9px 10px; }
+
+/* v0.5.22 - Compact Freebie phase */
+.wod20-mage-charamancer .mc-freebies-panel > h2 { margin-bottom: 4px; }
+.wod20-mage-charamancer .mc-freebie-intro { display:flex; align-items:baseline; gap:15px; justify-content:space-between; flex-wrap:wrap; margin-bottom:10px; }
+.wod20-mage-charamancer .mc-freebie-intro h2 { margin:0; border:none; padding:0; font-size:1.55rem; }
+.wod20-mage-charamancer .mc-freebie-help { margin:0; padding:0; font-size:11px; flex:0 1 auto; max-width:440px; }
+.wod20-mage-charamancer .mc-freebie-help summary { cursor:pointer; }
+.wod20-mage-charamancer .mc-freebie-help p { margin:6px 0; padding:6px 9px; border-radius:5px; background:color-mix(in srgb,currentColor 5%,transparent); }
+.wod20-mage-charamancer .mc-freebie-budget-strip { display:flex; flex-wrap:wrap; gap:0; padding:8px 10px; border:1px solid color-mix(in srgb,currentColor 26%,transparent); border-radius:7px; background:color-mix(in srgb,currentColor 3%,transparent); align-items:center; margin-bottom:5px; }
+.wod20-mage-charamancer .mc-freebie-budget-strip > div { display:flex; align-items:baseline; gap:6px; min-width:130px; flex:1; justify-content:center; border-right:1px solid color-mix(in srgb,currentColor 20%,transparent); }
+.wod20-mage-charamancer .mc-freebie-budget-strip > div:nth-child(3) { border-right:0; }
+.wod20-mage-charamancer .mc-freebie-budget-strip span { opacity:.8; font-size:11px; }
+.wod20-mage-charamancer .mc-freebie-budget-strip strong { font-size:15px; line-height:1.3; }
+.wod20-mage-charamancer .mc-freebie-auto-cost { width:100%; text-align:center; font-size:10px; opacity:.78; margin-top:3px; }
+.wod20-mage-charamancer .mc-freebie-carryover { margin:0 0 8px; font-size:11px; line-height:1.35; opacity:.83; }
+.wod20-mage-charamancer .mc-freebies-panel > .mc-merits-compact { padding:0; margin:5px 0 9px; border-top:0; }
+.wod20-mage-charamancer .mc-merits-panel { border:1px solid color-mix(in srgb,currentColor 23%,transparent); border-radius:6px; padding:0; margin:0; background:color-mix(in srgb,currentColor 2%,transparent); }
+.wod20-mage-charamancer .mc-merits-panel > summary { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 12px; cursor:pointer; padding:8px 10px; font-size:12px; list-style:none; }
+.wod20-mage-charamancer .mc-merits-panel > summary::-webkit-details-marker { display:none; }
+.wod20-mage-charamancer .mc-merits-panel > summary::before { content:'▸'; font-size:11px; opacity:.75; }
+.wod20-mage-charamancer .mc-merits-panel[open] > summary::before { content:'▾'; }
+.wod20-mage-charamancer .mc-merits-panel > summary strong { margin-right:auto; font-size:14px; }
+.wod20-mage-charamancer .mc-merits-panel > summary span { font-size:11px; opacity:.82; }
+.wod20-mage-charamancer .mc-merits-panel[open] { padding-bottom:8px; }
+.wod20-mage-charamancer .mc-merits-panel > :not(summary) { margin-left:10px; margin-right:10px; }
+.wod20-mage-charamancer .mc-merits-guidance, .wod20-mage-charamancer .mc-merits-empty { font-size:11px; margin-top:5px; margin-bottom:7px; opacity:.84; }
+.wod20-mage-charamancer .mc-merits-panel > details[data-panel-key="merit-add"] { border:1px solid color-mix(in srgb,currentColor 22%,transparent); border-radius:6px; padding:6px 9px; font-size:12px; }
+.wod20-mage-charamancer .mc-freebies-panel .mc-section-title { margin-top:10px; }
+.wod20-mage-charamancer .mc-freebie-core-rows { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0 0 10px; }
+.wod20-mage-charamancer .mc-freebie-core-row { min-width:0; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:9px 10px; border:1px solid color-mix(in srgb,currentColor 22%,transparent); border-radius:6px; background:color-mix(in srgb,currentColor 2%,transparent); }
+.wod20-mage-charamancer .mc-freebie-core-label { display:flex; flex-direction:column; flex:0 1 auto; min-width:0; gap:2px; }
+.wod20-mage-charamancer .mc-freebie-core-label strong { font-size:15px; }
+.wod20-mage-charamancer .mc-freebie-core-label small { font-size:10px; opacity:.82; }
+.wod20-mage-charamancer .mc-freebie-core-row .mc-dot-control { gap:3px; }
+.wod20-mage-charamancer .mc-freebie-core-row .mc-dot { width:15px !important; height:15px !important; }
+.wod20-mage-charamancer .mc-final-unspent-warning { display:flex; align-items:flex-start; gap:9px; padding:10px 12px; border:1px solid color-mix(in srgb,#c98c3b 65%,transparent); border-radius:6px; background:color-mix(in srgb,#c98c3b 12%,transparent); font-size:12px; line-height:1.4; margin:8px 0 12px; }
+.wod20-mage-charamancer .mc-final-unspent-warning i { margin-top:2px; }
+@media (max-width:980px) { .wod20-mage-charamancer .mc-freebie-core-rows { grid-template-columns:1fr; } }
+@media (max-width:600px) { .wod20-mage-charamancer .mc-freebie-budget-strip > div { min-width:85px; } .wod20-mage-charamancer .mc-freebie-core-row { flex-wrap:wrap; } }
+
+
+/* v0.5.23: Compact required-specialty editor, preserving the custom popover.
+   One specialty uses one horizontal row; additional specialties wrap in columns.
+   Do not place overflow:hidden on this section; the listbox is portaled to body. */
+.wod20-mage-charamancer .mc-specialties-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    margin: 7px 0 11px;
+    padding: 7px 10px;
+    background: color-mix(in srgb, #6b87c9 4%, transparent);
+    border: 1px solid color-mix(in srgb, #6b87c9 32%, currentColor 12%);
+    border-radius: 6px;
+}
+.wod20-mage-charamancer .mc-specialties-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    flex: 0 0 145px;
+    min-width: 0;
+}
+.wod20-mage-charamancer .mc-specialties-heading strong {
+    font-size: 12px;
+    line-height: 1.2;
+}
+.wod20-mage-charamancer .mc-specialties-heading small {
+    font-size: 10px;
+    line-height: 1.2;
+    opacity: 0.76;
+    cursor: help;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-grid {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
+    gap: 5px 12px;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-row {
+    display: grid;
+    grid-template-columns: minmax(76px, 108px) minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-row > label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    font-weight: 600;
+    min-width: 0;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-row label strong {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-row label small {
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: .68;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-combo {
+    min-height: 30px;
+    height: 30px;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-combo input[data-specialty-input] {
+    min-height: 28px;
+    height: 28px;
+    padding: 4px 8px;
+}
+.wod20-mage-charamancer .mc-specialties-compact .mc-specialty-toggle {
+    flex-basis: 30px;
+    min-width: 30px;
+    width: 30px;
+    min-height: 28px;
+    height: 28px;
+}
+@media (max-width: 760px) {
+    .wod20-mage-charamancer .mc-specialties-compact { flex-direction: column; align-items: stretch; gap: 6px; }
+    .wod20-mage-charamancer .mc-specialties-heading { flex: 0 0 auto; flex-direction: row; align-items: baseline; gap: 8px; }
+}
+
+/* v0.5.26: Give the inline Freebie counters readable sizing and balanced spacing.
+   The header remains one row at the usual Foundry window width. */
+.wod20-mage-charamancer .mc-freebie-intro {
+    display: grid !important;
+    grid-template-columns: minmax(215px, 1fr) repeat(3, minmax(105px, max-content)) max-content !important;
+    align-items: center;
+    column-gap: clamp(16px, 1.7vw, 24px);
+    row-gap: 0;
+    min-width: 735px;
+    width: 100%;
+    margin: 0 0 5px;
+    position: relative;
+}
+.wod20-mage-charamancer .mc-freebie-intro > h2 {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-size: clamp(1.2rem, 1.75vw, 1.5rem);
+    line-height: 1.25;
+    white-space: nowrap;
+}
+.wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-budget-item {
+    display: inline-flex !important;
+    align-items: baseline;
+    justify-content: center;
+    flex-flow: row nowrap !important;
+    width: max-content;
+    min-width: max-content;
+    justify-self: center;
+    margin: 0;
+    padding: 0;
+    gap: 7px;
+    border: 0;
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums;
+}
+.wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-budget-item > span:first-child {
+    font-size: 13px;
+    font-weight: 550;
+    opacity: .84;
+}
+.wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-budget-item strong {
+    font-size: 15px;
+    font-weight: 750;
+    line-height: 1.25;
+}
+.wod20-mage-charamancer .mc-freebie-intro .mc-freebie-auto-hint {
+    font-size: 11px;
+    opacity: .75;
+    align-self: center;
+}
+.wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-help {
+    margin: 0;
+    padding: 0;
+    justify-self: end;
+    max-width: none;
+    min-width: max-content;
+    font-size: 12px;
+    white-space: nowrap;
+}
+.wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-help > p {
+    white-space: normal;
+    position: absolute;
+    z-index: 12;
+    top: calc(100% + 6px);
+    right: 0;
+    width: min(410px, 100%);
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px;
+    background: var(--mc-popup-bg, #25242d);
+    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-radius: 6px;
+    box-shadow: 0 6px 18px #0005;
+    color: var(--mc-popup-fg, #f3f1f5);
+}
+@media (max-width: 850px) {
+    .wod20-mage-charamancer .mc-freebie-intro {
+        grid-template-columns: minmax(190px, 1fr) repeat(3, minmax(94px, max-content)) max-content !important;
+        column-gap: 12px;
+        min-width: 650px;
+    }
+    .wod20-mage-charamancer .mc-freebie-intro > h2 { font-size: 1.18rem; }
+    .wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-budget-item > span:first-child { font-size: 12px; }
+    .wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-budget-item strong { font-size: 14px; }
+    .wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-help { font-size: 11px; }
+}
+
+
+/* v0.5.27: Opaque, theme-aware contrast panel around ONLY the three
+   Freebie budget values. Preserve the existing single horizontal header. */
+.wod20-mage-charamancer .mc-freebie-intro {
+    grid-template-columns: minmax(210px, 1fr) minmax(330px, 1.65fr) max-content !important;
+    column-gap: clamp(12px, 1.45vw, 22px);
+}
+.wod20-mage-charamancer .mc-freebie-intro > .mc-freebie-budget-summary {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    column-gap: 8px;
+    min-width: 0;
+    padding: 7px 9px;
+    border: 1px solid #777c8d;
+    border-radius: 7px;
+    background: #282a34;
+    color: #f5f3f8;
+    box-shadow: 0 1px 3px #0005;
+}
+.wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item {
+    box-sizing: border-box;
+    display: inline-flex !important;
+    align-items: baseline;
+    flex-direction: row !important;
+    justify-content: center;
+    min-width: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 6px;
+    border: 0;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item + .mc-freebie-budget-item {
+    border-left: 1px solid #787d9066;
+}
+.wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item > span:first-child {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 1;
+}
+.wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item strong {
+    font-size: 15px;
+    font-weight: 750;
+    line-height: 1.2;
+    color: inherit;
+}
+.wod20-mage-charamancer .mc-freebie-budget-summary .mc-freebie-auto-hint {
+    align-self: center;
+    font-size: 11px;
+    opacity: 0.85;
+}
+:is(.theme-light, [data-theme="light"]) .wod20-mage-charamancer .mc-freebie-budget-summary,
+.wod20-mage-charamancer.theme-light .mc-freebie-budget-summary {
+    background: #f5f5f8;
+    color: #242733;
+    border-color: #9298a8;
+    box-shadow: 0 1px 3px #0002;
+}
+:is(.theme-light, [data-theme="light"]) .wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item + .mc-freebie-budget-item,
+.wod20-mage-charamancer.theme-light .mc-freebie-budget-summary > .mc-freebie-budget-item + .mc-freebie-budget-item {
+    border-left-color: #81879655;
+}
+@media (max-width: 850px) {
+    .wod20-mage-charamancer .mc-freebie-intro {
+        grid-template-columns: minmax(170px, 1fr) minmax(300px, 1.75fr) max-content !important;
+        column-gap: 10px;
+    }
+    .wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item {gap: 4px;}
+    .wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item > span:first-child {font-size: 12px;}
+    .wod20-mage-charamancer .mc-freebie-budget-summary > .mc-freebie-budget-item strong {font-size: 14px;}
+}
+
+
+/* v0.5.28: Keep optional starting Arete visible, without another accordion. */
+.wod20-mage-charamancer .mc-concept-arete-option {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 16px;
+    row-gap: 6px;
+    margin: 2px 0 11px;
+    padding: 8px 11px;
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 5px;
+    background: var(--color-bg-option, color-mix(in srgb, currentColor 6%, transparent));
+}
+.wod20-mage-charamancer .mc-concept-arete-option > strong {
+    font-size: 12px;
+    white-space: nowrap;
+}
+.wod20-mage-charamancer .mc-concept-arete-option .mc-concept-arete {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+}
+.wod20-mage-charamancer .mc-concept-arete-option .mc-concept-arete input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    flex: 0 0 auto;
+    accent-color: var(--color-warm-1, #b99b70);
+}
+.wod20-mage-charamancer .mc-concept-arete-option .mc-concept-arete small {
+    font-size: 11px;
+    font-weight: 400;
+    opacity: .78;
+}
+.wod20-mage-charamancer .mc-concept-arete-option .mc-concept-arete-note {
+    margin-left: auto;
+    font-size: 11px;
+    opacity: .7;
+    white-space: nowrap;
+}
+
+
+/* v0.5.31: Background picker is a single dropdown after the rated and custom
+   Background controls. The popup is mounted on <body> to avoid panel clipping. */
+.wod20-mage-charamancer .mc-background-selector { min-width: 0; margin-top: 9px; }
+.wod20-mage-charamancer .mc-background-selector-trigger {
+    box-sizing: border-box; width: 100%; min-width: 0; min-height: 34px;
+    display: flex; align-items: center; gap: 9px;
+    padding: 6px 10px; margin: 0;
+    border: 1px solid color-mix(in srgb, currentColor 29%, transparent);
+    border-radius: 5px; color: inherit; font: inherit; font-weight: 650;
+    font-size: 12px; line-height: 1.25;
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    text-align: left; cursor: pointer;
+}
+.wod20-mage-charamancer .mc-background-selector-trigger:not(:disabled):hover,
+.wod20-mage-charamancer .mc-background-selector-trigger[aria-expanded="true"] {
+    background: color-mix(in srgb, currentColor 11%, transparent);
+    border-color: color-mix(in srgb, currentColor 49%, transparent);
+}
+.wod20-mage-charamancer .mc-background-selector-trigger:disabled { opacity:.58; cursor:default; }
+.wod20-mage-charamancer .mc-background-selector-trigger > span { flex:1; min-width:0; }
+.wod20-mage-charamancer .mc-background-selector-trigger > small { font-size:10px; font-weight:400; opacity:.8; white-space:nowrap; }
+.wod20-mage-charamancer .mc-background-selector-trigger .mc-background-chevron { margin-left: auto; font-size:10px; }
+.mc-concept-popup.mc-background-popup { max-width: calc(100vw - 16px); }
+.mc-background-popup .mc-concept-option { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.mc-background-popup .mc-background-option-hint { font-size: 10px; font-weight: 400; opacity: .73; white-space: nowrap; }
+
+/* 0.5.33: XP notes and condensed transaction list */
+.mc-award-long-note{display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:13px}
+.mc-award-long-note small{opacity:.75}
+.mc-award-long-note textarea{width:100%;min-height:84px;box-sizing:border-box}
+.mc-xp-history{margin-top:12px;padding:8px;border:1px solid color-mix(in srgb,currentColor 22%,transparent);border-radius:7px}
+.mc-xp-history summary{cursor:pointer;font-weight:650}
+.mc-xp-history-list{margin-top:8px;max-height:280px;overflow:auto}
+.mc-xp-history-row{display:grid;grid-template-columns:minmax(0,1fr) 65px;gap:12px;padding:8px 4px;border-top:1px solid color-mix(in srgb,currentColor 16%,transparent)}
+.mc-xp-history-row>div{min-width:0;display:flex;flex-direction:column;gap:4px}.mc-xp-history-row span,.mc-xp-history-row small{opacity:.8}
+.mc-xp-history-row>strong{text-align:right}
+.mc-sheet-details-button{flex:0 0 auto;width:auto;white-space:nowrap}
